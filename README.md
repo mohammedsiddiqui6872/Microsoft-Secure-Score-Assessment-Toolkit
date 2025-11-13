@@ -48,9 +48,20 @@ A powerful PowerShell module for assessing and managing Microsoft 365 security p
 # Install the module
 Install-Module -Name Microsoft-Secure-Score-remediation-toolkit -Scope CurrentUser
 
-# Update to latest version
-Update-Module -Name Microsoft-Secure-Score-remediation-toolkit
+# Update to latest version (recommended to always use latest)
+Update-Module -Name Microsoft-Secure-Score-remediation-toolkit -Force
+
+# Verify installation
+Get-Module -ListAvailable Microsoft-Secure-Score-remediation-toolkit
 ```
+
+### 💖 Support This Project
+
+If this toolkit has helped improve your security posture, consider supporting its development:
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support%20This%20Project-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee)](https://buymeacoffee.com/mohammedsiddiqui)
+
+Your support helps maintain and improve this toolkit with new features, updates, and compatibility with the latest Microsoft 365 security controls!
 
 ### Prerequisites
 
