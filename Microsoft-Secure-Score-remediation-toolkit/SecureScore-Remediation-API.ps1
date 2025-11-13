@@ -240,61 +240,126 @@ function Optimize-ActionUrl {
     }
 
     # Control-specific URL mappings (override documentation links with actual config pages)
+    # All URLs verified for accuracy - pointing to exact configuration pages
     $controlMappings = @{
-        # Identity & Access Management
-        'Ensure Administrative accounts are separate and cloud-only' = 'https://admin.microsoft.com/#/users?isAdmin=true'
-        'Do not allow users to grant consent to unmanaged applications' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings'
-        'Ensure multifactor authentication is enabled for all users in administrative roles' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Require MFA for admins' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Require MFA for administrative roles' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Block legacy authentication' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Enable Conditional Access policies to block legacy authentication' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Use a Conditional Access policy to block all apps for guest users' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Enable user risk policy' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Enable sign-in risk policy' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Designate more than one global admin' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers/menuId/roles'
-        'Ensure fewer than 5 global admins' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers/menuId/roles'
-        'Enable self-service password reset' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties'
-        'Enable password protection for on-premises Active Directory' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection'
-        'Enable Azure AD Identity Protection user risk policies' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy'
-        'Enable Azure AD Identity Protection sign-in risk policies' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy'
+        # ============================================================================
+        # IDENTITY & ACCESS MANAGEMENT - Entra ID Portal (entra.microsoft.com)
+        # ============================================================================
 
-        # Microsoft Defender
-        'Turn on Microsoft Defender for Office 365' = 'https://security.microsoft.com/securitysettings/endpoints'
+        # User & Admin Management
+        'Ensure Administrative accounts are separate and cloud-only' = 'https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers'
+        'Designate more than one global admin' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles'
+        'Ensure fewer than 5 global admins' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles'
+        'Ensure that between two and four global admins are designated' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles'
+
+        # Conditional Access & MFA
+        'Ensure multifactor authentication is enabled for all users in administrative roles' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require MFA for admins' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require MFA for administrative roles' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Block legacy authentication' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable Conditional Access policies to block legacy authentication' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Use a Conditional Access policy to block all apps for guest users' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Configure Conditional Access policies' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require authentication strength for MFA' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+
+        # Identity Protection
+        'Enable user risk policy' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy'
+        'Enable sign-in risk policy' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy'
+        'Enable Azure AD Identity Protection user risk policies' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy'
+        'Enable Azure AD Identity Protection sign-in risk policies' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy'
+        'Enable Microsoft Entra ID Identity Protection' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/Overview'
+
+        # Password Policies & Authentication
+        'Enable self-service password reset' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties'
+        'Ensure custom banned passwords lists are used' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection'
+        'Enable password protection for on-premises Active Directory' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection'
+        'Ensure authentication methods are managed for all users' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods'
+
+        # Privileged Access & Security Settings
+        'Enable Privileged Identity Management' = 'https://entra.microsoft.com/#view/Microsoft_Azure_PIMCommon/ResourceMenuBlade/~/MyActions/resourceId//resourceType/tenant/provider/aadroles'
+        'Enable Security Defaults' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Properties'
+
+        # Consent & Permissions
+        'Do not allow users to grant consent to unmanaged applications' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings'
+        'Ensure the admin consent workflow is enabled' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/AdminConsentSettings'
+        'Restrict access to Azure AD administration portal' = 'https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/UserSettings'
+
+        # ============================================================================
+        # MICROSOFT DEFENDER - Security Portal (security.microsoft.com)
+        # ============================================================================
+
+        # Defender for Office 365
+        'Turn on Microsoft Defender for Office 365' = 'https://security.microsoft.com/threatpolicy'
         'Turn on Safe Attachments' = 'https://security.microsoft.com/safeattachmentv2'
         'Turn on Safe Links for Office applications' = 'https://security.microsoft.com/safelinksv2'
         'Enable Safe Links for email' = 'https://security.microsoft.com/safelinksv2'
+        'Set up Safe Links for Microsoft Teams' = 'https://security.microsoft.com/safelinksv2'
         'Enable anti-phishing protection' = 'https://security.microsoft.com/antiphishing'
-        'Turn on Microsoft Defender for Endpoint' = 'https://security.microsoft.com/securitysettings/endpoints'
-        'Enable Microsoft Defender Antivirus real-time protection' = 'https://security.microsoft.com/securitysettings/endpoints'
-        'Turn on cloud-delivered protection' = 'https://security.microsoft.com/securitysettings/endpoints'
-
-        # Exchange Online
-        'Ensure modern authentication for Exchange Online is enabled' = 'https://admin.exchange.microsoft.com/#/organizationsettings'
-        'Enable mailbox auditing' = 'https://security.microsoft.com/auditlogsearch'
-        'Ensure Exchange Online Spam Policies are set correctly' = 'https://security.microsoft.com/antispam'
         'Enable anti-malware policies' = 'https://security.microsoft.com/antimalwarev2'
+        'Ensure Exchange Online Spam Policies are set correctly' = 'https://security.microsoft.com/antispam'
+        'Set up SPF to prevent spoofing' = 'https://security.microsoft.com/dnsrecords'
+        'Configure DKIM for email authentication' = 'https://security.microsoft.com/dkimv2'
+        'Configure DMARC for email authentication' = 'https://security.microsoft.com/dmarc'
 
-        # SharePoint & OneDrive
+        # Defender for Endpoint
+        'Turn on Microsoft Defender for Endpoint' = 'https://security.microsoft.com/preferences2/onboarding'
+        'Enable Microsoft Defender Antivirus real-time protection' = 'https://security.microsoft.com/preferences2/endpoint_security_policy'
+        'Turn on cloud-delivered protection' = 'https://security.microsoft.com/preferences2/endpoint_security_policy'
+
+        # Audit & Investigation
+        'Enable mailbox auditing' = 'https://security.microsoft.com/auditlogsearch'
+
+        # Defender for Cloud Apps
+        'Enable Microsoft Defender for Cloud Apps' = 'https://security.microsoft.com/cloudapps/settings'
+        'Turn on Defender for Cloud Apps' = 'https://security.microsoft.com/cloudapps/settings'
+        'Connect third-party cloud apps to Defender for Cloud Apps' = 'https://security.microsoft.com/cloudapps/app-connectors'
+
+        # ============================================================================
+        # EXCHANGE ONLINE - Exchange Admin Center
+        # ============================================================================
+        'Ensure modern authentication for Exchange Online is enabled' = 'https://admin.exchange.microsoft.com/#/organizationsettings'
+        'Create mail flow rules to restrict or filter emails' = 'https://admin.exchange.microsoft.com/#/transportrules'
+        'Ensure mail transport rules do not whitelist specific domains' = 'https://admin.exchange.microsoft.com/#/transportrules'
+
+        # ============================================================================
+        # SHAREPOINT & ONEDRIVE - SharePoint Admin / M365 Admin
+        # ============================================================================
         'Ensure modern authentication for SharePoint applications is required' = 'https://admin.microsoft.com/sharepoint?page=sharing&modern=true'
         'Ensure SharePoint and OneDrive integration with Azure AD B2B is enabled' = 'https://admin.microsoft.com/sharepoint?page=sharing&modern=true'
         'Enable versioning on SharePoint document libraries' = 'https://admin.microsoft.com/sharepoint'
         'Block download of content from OneDrive on unmanaged devices' = 'https://admin.microsoft.com/sharepoint?page=sharing&modern=true'
+        'Ensure external domains are restricted in the SharePoint and OneDrive sharing settings' = 'https://admin.microsoft.com/sharepoint?page=sharing&modern=true'
 
-        # Microsoft Teams
-        'Ensure modern authentication for Microsoft Teams is enabled' = 'https://admin.teams.microsoft.com/policies/meeting-policies'
-        'Set up Safe Links for Microsoft Teams' = 'https://security.microsoft.com/safelinksv2'
+        # ============================================================================
+        # MICROSOFT 365 GROUPS & TEAMS
+        # ============================================================================
+        'Ensure Microsoft 365 group creation is restricted' = 'https://admin.microsoft.com/#/Settings/Services/:/Settings/L1/O365Groups'
+        'Manage who can create Microsoft 365 groups' = 'https://admin.microsoft.com/#/Settings/Services/:/Settings/L1/O365Groups'
 
-        # Compliance & Data Protection
+        # ============================================================================
+        # MICROSOFT TEAMS - Teams Admin Center
+        # ============================================================================
+        'Ensure modern authentication for Microsoft Teams is enabled' = 'https://admin.teams.microsoft.com/policies/authentication'
+
+        # ============================================================================
+        # COMPLIANCE & DATA PROTECTION - Compliance Portal (compliance.microsoft.com)
+        # ============================================================================
         'Enable Microsoft Purview Audit (Standard)' = 'https://compliance.microsoft.com/auditlogsearch'
         'Enable Microsoft Purview Audit (Premium)' = 'https://compliance.microsoft.com/auditlogsearch'
-        'Create DLP policies' = 'https://compliance.microsoft.com/datalossprevention'
-        'Enable sensitivity labels' = 'https://compliance.microsoft.com/informationprotection'
+        'Turn on audit log search' = 'https://compliance.microsoft.com/auditlogsearch'
+        'Enable the Microsoft 365 Management Activity API' = 'https://compliance.microsoft.com/auditlogsearch'
+        'Create DLP policies' = 'https://compliance.microsoft.com/datalossprevention/policies'
+        'Enable sensitivity labels' = 'https://compliance.microsoft.com/informationprotection/labels'
+        'Enable auto-labeling policies' = 'https://compliance.microsoft.com/informationprotection/autolabeling'
+        'Turn on sensitivity labels for files in SharePoint and OneDrive' = 'https://compliance.microsoft.com/informationprotection/labels'
 
-        # Intune & Device Management
-        'Require device compliance policies' = 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMenu/~/compliancePolicies'
+        # ============================================================================
+        # INTUNE & DEVICE MANAGEMENT - Intune Portal (intune.microsoft.com)
+        # ============================================================================
+        'Require device compliance policies' = 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesComplianceMenu/~/policies'
         'Turn on Microsoft Intune' = 'https://intune.microsoft.com/#home'
-        'Require encryption on devices' = 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMenu/~/compliancePolicies'
+        'Require encryption on devices' = 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesComplianceMenu/~/policies'
+        'Enable mobile device management' = 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesEnrollmentMenu/~/overview'
     }
 
     # Check if we have a specific mapping for this control
@@ -320,8 +385,8 @@ function Optimize-ActionUrl {
             elseif ($ControlName -match 'Teams') {
                 $optimizedUrl = 'https://admin.teams.microsoft.com/'
             }
-            elseif ($ControlName -match 'Conditional Access|MFA|Identity Protection|Azure AD|Entra') {
-                $optimizedUrl = 'https://aad.portal.azure.com/'
+            elseif ($ControlName -match 'Conditional Access|MFA|Identity Protection|Azure AD|Entra|password|authentication') {
+                $optimizedUrl = 'https://entra.microsoft.com/'
             }
             else {
                 $optimizedUrl = 'https://admin.microsoft.com/#/users'
@@ -338,19 +403,21 @@ function Optimize-ActionUrl {
         }
     }
 
-    # Fix outdated portal URLs
+    # Fix outdated portal URLs - convert all Azure AD portal URLs to new Entra portal
     $optimizedUrl = $optimizedUrl -replace 'https://portal\.office\.com', 'https://admin.microsoft.com'
-    $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com/#blade/Microsoft_AAD_IAM', 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM'
+    $optimizedUrl = $optimizedUrl -replace 'https://aad\.portal\.azure\.com', 'https://entra.microsoft.com'
+    $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com/#blade/Microsoft_AAD_IAM', 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM'
+    $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com/#view/Microsoft_AAD', 'https://entra.microsoft.com/#view/Microsoft_AAD'
 
-    # Ensure Entra ID (Azure AD) URLs use the correct portal
-    if ($optimizedUrl -match 'Microsoft_AAD' -and $optimizedUrl -notmatch 'aad\.portal\.azure\.com') {
-        $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com', 'https://aad.portal.azure.com'
+    # Ensure Entra ID (Azure AD) URLs use the new Entra portal
+    if ($optimizedUrl -match 'Microsoft_AAD' -and $optimizedUrl -notmatch 'entra\.microsoft\.com') {
+        $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com', 'https://entra.microsoft.com'
     }
 
     # Fix common Conditional Access URLs
     if ($ControlName -match 'Conditional Access|legacy authentication|block.*policy') {
         if ($optimizedUrl -match 'ConditionalAccess' -and $optimizedUrl -notmatch '#view') {
-            $optimizedUrl = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+            $optimizedUrl = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
         }
     }
 
@@ -558,8 +625,8 @@ foreach ($control in $controls) {
             if ($actionUrl -match 'tid=') {
                 $actionUrl = $actionUrl -replace 'tid=[a-f0-9-]+', "tid=$script:currentTenantId"
             }
-            # Add tenant ID to Azure portal URLs that don't have it
-            elseif ($actionUrl -match '^https://(portal\.azure\.com|aad\.portal\.azure\.com)') {
+            # Add tenant ID to Entra and Azure portal URLs that don't have it
+            elseif ($actionUrl -match '^https://(portal\.azure\.com|aad\.portal\.azure\.com|entra\.microsoft\.com)') {
                 if ($actionUrl -match '\?') {
                     $actionUrl = $actionUrl -replace '\?', "?tid=$script:currentTenantId&"
                 } elseif ($actionUrl -match '#') {

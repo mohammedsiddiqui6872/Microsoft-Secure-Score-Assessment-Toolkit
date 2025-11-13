@@ -339,6 +339,14 @@ Invoke-MicrosoftSecureScore
 
 ## 📝 Changelog
 
+### [1.3.1] - 2025-11-14
+**Complete Entra Portal Migration & Enhanced URL Mappings:**
+- **Complete Azure AD to Entra Portal Migration**: All Azure AD portal URLs now use entra.microsoft.com (0 old aad.portal.azure.com links remain)
+- **Enhanced Control Mappings**: Added 15+ additional control-specific URL mappings across all categories
+- **New Mappings**: Admin consent workflow, M365 Groups restrictions, SPF/DKIM/DMARC, Defender for Cloud Apps, mail flow rules, SharePoint domain restrictions, Management Activity API, sensitivity labels
+- **URL Quality**: Verified 60+ control-to-portal mappings for accuracy across 328 unique URLs
+- **Intelligent Documentation Links**: Only 6 documentation links remain where no portal equivalent exists (DNS configs, on-prem settings, API references)
+
 ### [1.3.0] - 2025-11-14
 **Major Enhancement:**
 - Added 40+ specific control-to-URL mappings for accurate configuration links

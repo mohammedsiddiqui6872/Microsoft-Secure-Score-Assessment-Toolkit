@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-remediation-toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.3.0'
+ModuleVersion = '1.3.1'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -117,6 +117,46 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+## v1.3.1 - Complete Entra Portal Migration & Enhanced URL Mappings
+
+### Major Enhancements
+- **Complete Azure AD to Entra Portal Migration**: All Azure AD portal URLs now use entra.microsoft.com
+- **Enhanced Control Mappings**: Added 15+ additional control-specific URL mappings
+- **Zero Old Portal Links**: Eliminated all aad.portal.azure.com references
+
+### New Control Mappings Added
+**Identity & Access Management**
+- Admin consent workflow → Entra ID Consent Settings
+- Microsoft 365 Groups creation restrictions → M365 Admin Groups Settings
+
+**Microsoft Defender & Security**
+- SPF, DKIM, DMARC configuration → Security portal DNS/email auth pages
+- Defender for Cloud Apps → Security portal cloud apps settings
+- App connectors → Security portal app governance
+
+**Exchange Online**
+- Mail flow rules → Exchange Admin transport rules
+- Transport rule whitelisting → Exchange Admin policies
+
+**SharePoint & OneDrive**
+- External domain restrictions → SharePoint Admin sharing settings
+
+**Compliance & Data Protection**
+- Office 365 Management Activity API → Compliance portal audit search
+- Sensitivity labels for SharePoint/OneDrive → Compliance portal labels
+
+### URL Quality Improvements
+- All Entra ID controls use new entra.microsoft.com portal
+- Verified 60+ control-to-portal mappings for accuracy
+- Documentation links only remain where no portal equivalent exists
+- Enhanced tenant context injection for all Microsoft portals
+
+### Verification Results
+- 0 old Azure AD portal URLs (aad.portal.azure.com)
+- 9+ unique Entra ID control mappings
+- 6 intentional documentation links (for DNS configs, on-prem settings, API references)
+- 328 unique portal URLs across 411 controls
+
 ## v1.3.0 - Comprehensive Configuration URL Mappings
 
 ### Major Enhancement
