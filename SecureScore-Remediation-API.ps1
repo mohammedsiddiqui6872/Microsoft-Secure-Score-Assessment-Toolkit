@@ -1018,20 +1018,6 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             border-top: 1px solid #3f3f46;
         }
 
-        .action-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-
         .action-btn-primary {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: #fff;
@@ -1069,12 +1055,66 @@ Write-Log "=== Generating HTML Report ===" -Level Info
         }
 
         /* Footer */
+        /* Floating Action Buttons (Right Side) */
+        .floating-actions {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1000;
+        }
+        .action-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border: 2px solid #60a5fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(96, 165, 250, 0.4);
+            border-color: #93c5fd;
+        }
+        .action-btn::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            right: 70px;
+            background: #18181b;
+            color: #e4e4e7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border: 1px solid #3f3f46;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .action-btn:hover::before {
+            opacity: 1;
+        }
+
         .footer {
             background: #0a0a0c;
             border-top: 1px solid #27272a;
-            padding: 20px 40px;
+            padding: 15px 40px;
             text-align: center;
-            font-size: 0.8em;
+            font-size: 0.85em;
             color: #71717a;
         }
 
@@ -1169,18 +1209,28 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             $categorySectionsHtml
         </div>
 
+        <!-- Floating Action Buttons -->
+        <div class="floating-actions">
+            <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit" target="_blank" class="action-btn" data-tooltip="View on GitHub">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+            <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues" target="_blank" class="action-btn" data-tooltip="Report Issues">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1 6h2v8h-2v-8zm1 12.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+            </a>
+            <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new" target="_blank" class="action-btn" data-tooltip="Submit Feedback">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 3c5.514 0 10 3.592 10 8.007 0 4.917-5.145 7.961-9.91 7.961-1.937 0-3.383-.397-4.394-.644-1 .613-1.595 1.037-4.272 1.82.535-1.373.723-2.748.602-4.265-.838-1-2.025-2.4-2.025-4.872-.001-4.415 4.485-8.007 9.999-8.007zm0-2c-6.338 0-12 4.226-12 10.007 0 2.05.739 4.063 2.047 5.625.055 1.83-1.023 4.456-1.993 6.368 2.602-.47 6.301-1.508 7.978-2.536 1.418.345 2.775.503 4.059.503 7.084 0 11.91-4.837 11.91-9.961-.001-5.811-5.702-10.006-12.001-10.006z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/mohammedsiddiqui6872/" target="_blank" class="action-btn" data-tooltip="Let's Chat!">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+            </a>
+            <a href="https://buymeacoffee.com/mohammedsiddiqui" target="_blank" class="action-btn" data-tooltip="Buy Me a Coffee">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.9 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg>
+            </a>
+        </div>
+
         <!-- Footer -->
         <div class="footer">
-            <p>Microsoft Secure Score API Assessment Report | Generated $(Get-Date -Format "yyyy-MM-dd HH:mm:ss") | Powered by Microsoft Graph API</p>
-            <p style="margin-top: 8px;">This report contains $totalChecks controls fetched directly from Microsoft's Secure Score API</p>
-            <p style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #27272a;">
-                <strong>Microsoft Secure Score Remediation Toolkit</strong><br/>
-                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit" target="_blank" style="color: #60a5fa; text-decoration: none;">View on GitHub</a> |
-                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues" target="_blank" style="color: #60a5fa; text-decoration: none;">Report Issues</a> |
-                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new" target="_blank" style="color: #60a5fa; text-decoration: none;">Submit Feedback</a> |
-                <a href="https://buymeacoffee.com/mohammedsiddiqui" target="_blank" style="color: #60a5fa; text-decoration: none;">☕ Buy Me a Coffee</a>
-            </p>
-            <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.7;">Run by: $runByUser</p>
+            <p><strong>Microsoft Secure Score Remediation Toolkit</strong> | Generated $(Get-Date -Format "yyyy-MM-dd HH:mm:ss") | $totalChecks controls | Run by: $runByUser</p>
         </div>
     </div>
 
