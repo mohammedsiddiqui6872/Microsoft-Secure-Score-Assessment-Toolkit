@@ -688,7 +688,7 @@ Write-Log "=== Generating HTML Report ===" -Level Info
         /* Header */
         .header {
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            padding: 40px;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -696,24 +696,25 @@ Write-Log "=== Generating HTML Report ===" -Level Info
         }
 
         .header h1 {
-            font-size: 2.5em;
+            font-size: 1.8em;
             font-weight: 700;
             letter-spacing: -1px;
+            margin: 0;
         }
 
         .subtitle {
-            font-size: 1.1em;
+            font-size: 0.9em;
             opacity: 0.9;
-            margin-top: 8px;
+            margin-top: 4px;
         }
 
         .header-right {
             text-align: right;
-            font-size: 0.95em;
+            font-size: 0.85em;
         }
 
         .header-right > div {
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         /* Summary Cards */
