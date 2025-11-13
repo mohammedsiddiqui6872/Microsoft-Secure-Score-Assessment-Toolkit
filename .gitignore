@@ -1,0 +1,25 @@
+# Logs
+*.log
+Logs/
+
+# Reports
+*.html
+Reports/
+
+# Cache
+Cache/
+
+# CSV outputs
+ActionUrl-Analysis.csv
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# PowerShell
+*.ps1.bak
+
+# Temporary files
+*.tmp
+*.temp
+~$*
