@@ -1135,7 +1135,7 @@ Write-Log "=== Generating HTML Report ===" -Level Info
         <!-- Header -->
         <div class="header">
             <div class="header-left">
-                <h1>SECURE SCORE ASSESSMENT <span class="api-badge">API-DRIVEN</span></h1>
+                <h1>Microsoft SECURE SCORE ASSESSMENT</h1>
                 <div class="subtitle">$actualTenantName</div>
                 <div class="subtitle" style="font-size: 0.75em; margin-top: 4px; opacity: 0.8;">Tenant ID: $tenantIdDisplay</div>
             </div>
