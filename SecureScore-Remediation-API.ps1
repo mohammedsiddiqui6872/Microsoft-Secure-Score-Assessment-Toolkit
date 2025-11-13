@@ -277,8 +277,13 @@ try {
     # Get tenant information
     $context = Get-MgContext
     $script:currentTenantId = $context.TenantId
+    $script:currentUserAccount = $context.Account
+
     if ($script:currentTenantId) {
         Write-Log "Tenant ID: $script:currentTenantId" -Level Info
+    }
+    if ($script:currentUserAccount) {
+        Write-Log "Signed in as: $script:currentUserAccount" -Level Info
     }
 }
 catch {
@@ -519,6 +524,8 @@ Write-Log "=== Generating HTML Report ===" -Level Info
 
     $reportDate = Get-Date -Format "MMMM dd, yyyy HH:mm:ss"
     $actualTenantName = if ($TenantName -ne "Your Organization") { $TenantName } else { "Microsoft 365 Tenant" }
+    $runByUser = if ($script:currentUserAccount) { $script:currentUserAccount } else { "Unknown User" }
+    $tenantIdDisplay = if ($script:currentTenantId) { $script:currentTenantId } else { "Unknown" }
 
     $totalChecks = $script:reportData.ExecutiveSummary.TotalChecks
     $compliant = $script:reportData.ExecutiveSummary.Compliant
@@ -1075,9 +1082,11 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             <div class="header-left">
                 <h1>SECURE SCORE ASSESSMENT <span class="api-badge">API-DRIVEN</span></h1>
                 <div class="subtitle">$actualTenantName</div>
+                <div class="subtitle" style="font-size: 0.75em; margin-top: 4px; opacity: 0.8;">Tenant ID: $tenantIdDisplay</div>
             </div>
             <div class="header-right">
                 <div>Generated: $reportDate</div>
+                <div>Run by: $runByUser</div>
                 <div>Controls Source: Microsoft Graph API</div>
                 <div>Total Controls: $totalChecks</div>
             </div>
@@ -1149,6 +1158,13 @@ Write-Log "=== Generating HTML Report ===" -Level Info
         <div class="footer">
             <p>Microsoft Secure Score API Assessment Report | Generated $(Get-Date -Format "yyyy-MM-dd HH:mm:ss") | Powered by Microsoft Graph API</p>
             <p style="margin-top: 8px;">This report contains $totalChecks controls fetched directly from Microsoft's Secure Score API</p>
+            <p style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #27272a;">
+                <strong>Microsoft Secure Score Remediation Toolkit</strong><br/>
+                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit" target="_blank" style="color: #60a5fa; text-decoration: none;">View on GitHub</a> |
+                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues" target="_blank" style="color: #60a5fa; text-decoration: none;">Report Issues</a> |
+                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new" target="_blank" style="color: #60a5fa; text-decoration: none;">Submit Feedback</a>
+            </p>
+            <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.7;">Run by: $runByUser</p>
         </div>
     </div>
 
