@@ -1176,7 +1176,8 @@ Write-Log "=== Generating HTML Report ===" -Level Info
                 <strong>Microsoft Secure Score Remediation Toolkit</strong><br/>
                 <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit" target="_blank" style="color: #60a5fa; text-decoration: none;">View on GitHub</a> |
                 <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues" target="_blank" style="color: #60a5fa; text-decoration: none;">Report Issues</a> |
-                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new" target="_blank" style="color: #60a5fa; text-decoration: none;">Submit Feedback</a>
+                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new" target="_blank" style="color: #60a5fa; text-decoration: none;">Submit Feedback</a> |
+                <a href="https://buymeacoffee.com/mohammedsiddiqui" target="_blank" style="color: #60a5fa; text-decoration: none;">☕ Buy Me a Coffee</a>
             </p>
             <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.7;">Run by: $runByUser</p>
         </div>
