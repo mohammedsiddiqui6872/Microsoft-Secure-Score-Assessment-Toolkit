@@ -622,7 +622,7 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             }
 
             $categorySectionsHtml += @"
-                <div class="settings-row">
+                <div class="settings-row" data-status="$($item.Status)" data-risk="$($item.Risk)">
                     <div class="row-header">
                         <div class="setting-info">
                             <div class="setting-name">$($item.SettingName)</div>
@@ -719,9 +719,9 @@ Write-Log "=== Generating HTML Report ===" -Level Info
         /* Summary Cards */
         .summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 30px 40px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            padding: 20px 40px;
             background: #0a0a0c;
         }
 
@@ -729,27 +729,41 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             background: linear-gradient(135deg, #18181b 0%, #27272a 100%);
             border: 1px solid #3f3f46;
             border-radius: 8px;
-            padding: 20px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            border-color: #60a5fa;
+        }
+
+        .summary-card.active {
+            border: 2px solid #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
         }
 
         .summary-card h3 {
-            font-size: 0.85em;
+            font-size: 0.7em;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             color: #71717a;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .summary-card .value {
-            font-size: 2.5em;
+            font-size: 2em;
             font-weight: 700;
             color: #fafafa;
         }
 
         .summary-card .subtext {
-            font-size: 0.9em;
+            font-size: 0.75em;
             color: #a1a1aa;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .summary-card.highlight {
@@ -1117,32 +1131,32 @@ Write-Log "=== Generating HTML Report ===" -Level Info
 
         <!-- Summary Cards -->
         <div class="summary">
-            <div class="summary-card highlight">
+            <div class="summary-card highlight" data-filter="status" data-value="Compliant" onclick="filterControls(this)">
                 <h3>Compliant Controls</h3>
                 <div class="value">$compliant</div>
                 <div class="subtext">Already implemented</div>
             </div>
-            <div class="summary-card warning">
+            <div class="summary-card warning" data-filter="status" data-value="NonCompliant" onclick="filterControls(this)">
                 <h3>Non-Compliant Controls</h3>
                 <div class="value">$nonCompliant</div>
                 <div class="subtext">Action required</div>
             </div>
-            <div class="summary-card">
+            <div class="summary-card" data-filter="risk" data-value="High" onclick="filterControls(this)">
                 <h3>High Risk</h3>
                 <div class="value">$highRisk</div>
                 <div class="subtext">Priority items</div>
             </div>
-            <div class="summary-card">
+            <div class="summary-card" data-filter="risk" data-value="Medium" onclick="filterControls(this)">
                 <h3>Medium Risk</h3>
                 <div class="value">$mediumRisk</div>
                 <div class="subtext">Important items</div>
             </div>
-            <div class="summary-card">
+            <div class="summary-card" data-filter="risk" data-value="Low" onclick="filterControls(this)">
                 <h3>Low Risk</h3>
                 <div class="value">$lowRisk</div>
                 <div class="subtext">Standard items</div>
             </div>
-            <div class="summary-card">
+            <div class="summary-card" data-filter="status" data-value="NotApplicable" onclick="filterControls(this)">
                 <h3>Not Applicable</h3>
                 <div class="value">$notApplicable</div>
                 <div class="subtext">Skipped controls</div>
@@ -1169,6 +1183,70 @@ Write-Log "=== Generating HTML Report ===" -Level Info
     </div>
 
     <script>
+        let activeFilter = null;
+
+        // Filter controls based on summary card clicks
+        function filterControls(card) {
+            const filterType = card.getAttribute('data-filter');
+            const filterValue = card.getAttribute('data-value');
+            const allRows = document.querySelectorAll('.settings-row');
+            const allCards = document.querySelectorAll('.summary-card');
+
+            // Toggle filter - if same card clicked, clear filter
+            if (activeFilter && activeFilter.type === filterType && activeFilter.value === filterValue) {
+                // Clear filter
+                allRows.forEach(row => row.classList.remove('hidden'));
+                allCards.forEach(c => c.classList.remove('active'));
+                activeFilter = null;
+
+                // Expand all categories to show all controls
+                document.querySelectorAll('.category-section').forEach(cat => {
+                    cat.classList.add('expanded');
+                });
+            } else {
+                // Apply new filter
+                activeFilter = { type: filterType, value: filterValue };
+
+                // Remove active class from all cards
+                allCards.forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked card
+                card.classList.add('active');
+
+                // Filter rows
+                allRows.forEach(row => {
+                    const rowValue = row.getAttribute('data-' + filterType);
+                    if (rowValue === filterValue) {
+                        row.classList.remove('hidden');
+                    } else {
+                        row.classList.add('hidden');
+                    }
+                });
+
+                // Expand all categories to show filtered results
+                document.querySelectorAll('.category-section').forEach(cat => {
+                    cat.classList.add('expanded');
+                });
+            }
+
+            // Update category counts
+            updateCategoryCounts();
+        }
+
+        // Update category counts based on visible rows
+        function updateCategoryCounts() {
+            document.querySelectorAll('.category-section').forEach(category => {
+                const visibleRows = category.querySelectorAll('.settings-row:not(.hidden)');
+                const totalRows = category.querySelectorAll('.settings-row');
+
+                if (visibleRows.length === 0) {
+                    category.style.display = 'none';
+                } else {
+                    category.style.display = 'block';
+                }
+            });
+        }
+
         // Category expand/collapse
         document.querySelectorAll('.category-header').forEach(header => {
             header.addEventListener('click', function() {
