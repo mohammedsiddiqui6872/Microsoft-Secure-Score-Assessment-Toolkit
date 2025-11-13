@@ -600,11 +600,11 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             if ($item.ActionUrl) {
                 $actionButtonsHtml = @"
                 <div class="action-buttons">
-                    <a href="$($item.ActionUrl)" target="_blank" class="action-btn action-btn-primary">
+                    <a href="$($item.ActionUrl)" target="_blank" class="action-button action-btn-primary">
                         <span class="action-icon">&#9881;</span>
                         <span>Configure Setting</span>
                     </a>
-                    <a href="$($item.Reference)" target="_blank" class="action-btn action-btn-secondary">
+                    <a href="$($item.Reference)" target="_blank" class="action-button action-btn-secondary">
                         <span class="action-icon">&#128218;</span>
                         <span>View Documentation</span>
                     </a>
@@ -613,7 +613,7 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             } elseif ($item.Reference) {
                 $actionButtonsHtml = @"
                 <div class="action-buttons">
-                    <a href="$($item.Reference)" target="_blank" class="action-btn action-btn-secondary">
+                    <a href="$($item.Reference)" target="_blank" class="action-button action-btn-secondary">
                         <span class="action-icon">&#128218;</span>
                         <span>View Documentation</span>
                     </a>
@@ -1016,6 +1016,21 @@ Write-Log "=== Generating HTML Report ===" -Level Info
             margin-top: 16px;
             padding-top: 16px;
             border-top: 1px solid #3f3f46;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
         }
 
         .action-btn-primary {
