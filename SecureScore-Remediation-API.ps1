@@ -241,23 +241,32 @@ function Optimize-ActionUrl {
 
     # Control-specific URL mappings (override documentation links with actual config pages)
     $controlMappings = @{
-        # Identity & Access Management
-        'Ensure Administrative accounts are separate and cloud-only' = 'https://admin.microsoft.com/#/users?isAdmin=true'
-        'Do not allow users to grant consent to unmanaged applications' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings'
-        'Ensure multifactor authentication is enabled for all users in administrative roles' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Require MFA for admins' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Require MFA for administrative roles' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Block legacy authentication' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Enable Conditional Access policies to block legacy authentication' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Use a Conditional Access policy to block all apps for guest users' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Enable user risk policy' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Enable sign-in risk policy' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
-        'Designate more than one global admin' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers/menuId/roles'
-        'Ensure fewer than 5 global admins' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers/menuId/roles'
-        'Enable self-service password reset' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties'
-        'Enable password protection for on-premises Active Directory' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection'
-        'Enable Azure AD Identity Protection user risk policies' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy'
-        'Enable Azure AD Identity Protection sign-in risk policies' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy'
+        # Identity & Access Management - Using entra.microsoft.com (new Entra portal)
+        'Ensure Administrative accounts are separate and cloud-only' = 'https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers/adminFilter/true'
+        'Do not allow users to grant consent to unmanaged applications' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings'
+        'Ensure multifactor authentication is enabled for all users in administrative roles' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require MFA for admins' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require MFA for administrative roles' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Block legacy authentication' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable Conditional Access policies to block legacy authentication' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Use a Conditional Access policy to block all apps for guest users' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable user risk policy' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable sign-in risk policy' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Designate more than one global admin' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles'
+        'Ensure fewer than 5 global admins' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles'
+        'Enable self-service password reset' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties'
+        'Ensure custom banned passwords lists are used' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection'
+        'Enable password protection for on-premises Active Directory' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection'
+        'Enable Azure AD Identity Protection user risk policies' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy'
+        'Enable Azure AD Identity Protection sign-in risk policies' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy'
+        'Ensure that between two and four global admins are designated' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles'
+        'Enable Microsoft Entra ID Identity Protection' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/Overview'
+        'Configure Conditional Access policies' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require authentication strength for MFA' = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable Privileged Identity Management' = 'https://entra.microsoft.com/#view/Microsoft_Azure_PIMCommon/ResourceMenuBlade/~/MyActions/resourceId//resourceType/tenant/provider/aadroles'
+        'Ensure authentication methods are managed for all users' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods'
+        'Enable Security Defaults' = 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Properties'
+        'Restrict access to Azure AD administration portal' = 'https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/UserSettings'
 
         # Microsoft Defender
         'Turn on Microsoft Defender for Office 365' = 'https://security.microsoft.com/securitysettings/endpoints'
@@ -320,8 +329,8 @@ function Optimize-ActionUrl {
             elseif ($ControlName -match 'Teams') {
                 $optimizedUrl = 'https://admin.teams.microsoft.com/'
             }
-            elseif ($ControlName -match 'Conditional Access|MFA|Identity Protection|Azure AD|Entra') {
-                $optimizedUrl = 'https://aad.portal.azure.com/'
+            elseif ($ControlName -match 'Conditional Access|MFA|Identity Protection|Azure AD|Entra|password|authentication') {
+                $optimizedUrl = 'https://entra.microsoft.com/'
             }
             else {
                 $optimizedUrl = 'https://admin.microsoft.com/#/users'
@@ -338,19 +347,21 @@ function Optimize-ActionUrl {
         }
     }
 
-    # Fix outdated portal URLs
+    # Fix outdated portal URLs - convert all Azure AD portal URLs to new Entra portal
     $optimizedUrl = $optimizedUrl -replace 'https://portal\.office\.com', 'https://admin.microsoft.com'
-    $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com/#blade/Microsoft_AAD_IAM', 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM'
+    $optimizedUrl = $optimizedUrl -replace 'https://aad\.portal\.azure\.com', 'https://entra.microsoft.com'
+    $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com/#blade/Microsoft_AAD_IAM', 'https://entra.microsoft.com/#view/Microsoft_AAD_IAM'
+    $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com/#view/Microsoft_AAD', 'https://entra.microsoft.com/#view/Microsoft_AAD'
 
-    # Ensure Entra ID (Azure AD) URLs use the correct portal
-    if ($optimizedUrl -match 'Microsoft_AAD' -and $optimizedUrl -notmatch 'aad\.portal\.azure\.com') {
-        $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com', 'https://aad.portal.azure.com'
+    # Ensure Entra ID (Azure AD) URLs use the new Entra portal
+    if ($optimizedUrl -match 'Microsoft_AAD' -and $optimizedUrl -notmatch 'entra\.microsoft\.com') {
+        $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com', 'https://entra.microsoft.com'
     }
 
     # Fix common Conditional Access URLs
     if ($ControlName -match 'Conditional Access|legacy authentication|block.*policy') {
         if ($optimizedUrl -match 'ConditionalAccess' -and $optimizedUrl -notmatch '#view') {
-            $optimizedUrl = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+            $optimizedUrl = 'https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
         }
     }
 
@@ -558,8 +569,8 @@ foreach ($control in $controls) {
             if ($actionUrl -match 'tid=') {
                 $actionUrl = $actionUrl -replace 'tid=[a-f0-9-]+', "tid=$script:currentTenantId"
             }
-            # Add tenant ID to Azure portal URLs that don't have it
-            elseif ($actionUrl -match '^https://(portal\.azure\.com|aad\.portal\.azure\.com)') {
+            # Add tenant ID to Entra and Azure portal URLs that don't have it
+            elseif ($actionUrl -match '^https://(portal\.azure\.com|aad\.portal\.azure\.com|entra\.microsoft\.com)') {
                 if ($actionUrl -match '\?') {
                     $actionUrl = $actionUrl -replace '\?', "?tid=$script:currentTenantId&"
                 } elseif ($actionUrl -match '#') {
