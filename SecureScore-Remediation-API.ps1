@@ -239,8 +239,104 @@ function Optimize-ActionUrl {
         return $Url
     }
 
-    # Common URL corrections and optimizations
+    # Control-specific URL mappings (override documentation links with actual config pages)
+    $controlMappings = @{
+        # Identity & Access Management
+        'Ensure Administrative accounts are separate and cloud-only' = 'https://admin.microsoft.com/#/users?isAdmin=true'
+        'Do not allow users to grant consent to unmanaged applications' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings'
+        'Ensure multifactor authentication is enabled for all users in administrative roles' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require MFA for admins' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Require MFA for administrative roles' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Block legacy authentication' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable Conditional Access policies to block legacy authentication' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Use a Conditional Access policy to block all apps for guest users' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable user risk policy' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Enable sign-in risk policy' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        'Designate more than one global admin' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers/menuId/roles'
+        'Ensure fewer than 5 global admins' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers/menuId/roles'
+        'Enable self-service password reset' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties'
+        'Enable password protection for on-premises Active Directory' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection'
+        'Enable Azure AD Identity Protection user risk policies' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy'
+        'Enable Azure AD Identity Protection sign-in risk policies' = 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy'
+
+        # Microsoft Defender
+        'Turn on Microsoft Defender for Office 365' = 'https://security.microsoft.com/securitysettings/endpoints'
+        'Turn on Safe Attachments' = 'https://security.microsoft.com/safeattachmentv2'
+        'Turn on Safe Links for Office applications' = 'https://security.microsoft.com/safelinksv2'
+        'Enable Safe Links for email' = 'https://security.microsoft.com/safelinksv2'
+        'Enable anti-phishing protection' = 'https://security.microsoft.com/antiphishing'
+        'Turn on Microsoft Defender for Endpoint' = 'https://security.microsoft.com/securitysettings/endpoints'
+        'Enable Microsoft Defender Antivirus real-time protection' = 'https://security.microsoft.com/securitysettings/endpoints'
+        'Turn on cloud-delivered protection' = 'https://security.microsoft.com/securitysettings/endpoints'
+
+        # Exchange Online
+        'Ensure modern authentication for Exchange Online is enabled' = 'https://admin.exchange.microsoft.com/#/organizationsettings'
+        'Enable mailbox auditing' = 'https://security.microsoft.com/auditlogsearch'
+        'Ensure Exchange Online Spam Policies are set correctly' = 'https://security.microsoft.com/antispam'
+        'Enable anti-malware policies' = 'https://security.microsoft.com/antimalwarev2'
+
+        # SharePoint & OneDrive
+        'Ensure modern authentication for SharePoint applications is required' = 'https://admin.microsoft.com/sharepoint?page=sharing&modern=true'
+        'Ensure SharePoint and OneDrive integration with Azure AD B2B is enabled' = 'https://admin.microsoft.com/sharepoint?page=sharing&modern=true'
+        'Enable versioning on SharePoint document libraries' = 'https://admin.microsoft.com/sharepoint'
+        'Block download of content from OneDrive on unmanaged devices' = 'https://admin.microsoft.com/sharepoint?page=sharing&modern=true'
+
+        # Microsoft Teams
+        'Ensure modern authentication for Microsoft Teams is enabled' = 'https://admin.teams.microsoft.com/policies/meeting-policies'
+        'Set up Safe Links for Microsoft Teams' = 'https://security.microsoft.com/safelinksv2'
+
+        # Compliance & Data Protection
+        'Enable Microsoft Purview Audit (Standard)' = 'https://compliance.microsoft.com/auditlogsearch'
+        'Enable Microsoft Purview Audit (Premium)' = 'https://compliance.microsoft.com/auditlogsearch'
+        'Create DLP policies' = 'https://compliance.microsoft.com/datalossprevention'
+        'Enable sensitivity labels' = 'https://compliance.microsoft.com/informationprotection'
+
+        # Intune & Device Management
+        'Require device compliance policies' = 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMenu/~/compliancePolicies'
+        'Turn on Microsoft Intune' = 'https://intune.microsoft.com/#home'
+        'Require encryption on devices' = 'https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesMenu/~/compliancePolicies'
+    }
+
+    # Check if we have a specific mapping for this control
     $optimizedUrl = $Url
+    foreach ($key in $controlMappings.Keys) {
+        if ($ControlName -match [regex]::Escape($key)) {
+            $optimizedUrl = $controlMappings[$key]
+            Write-Verbose "Mapped control '$ControlName' to $optimizedUrl"
+            return $optimizedUrl
+        }
+    }
+
+    # If URL points to learn.microsoft.com (documentation), try to find a better config URL
+    if ($optimizedUrl -match 'learn\.microsoft\.com') {
+        # Try to determine the appropriate portal based on control name
+        if ($ControlName -match 'admin|user|role|account') {
+            if ($ControlName -match 'Exchange') {
+                $optimizedUrl = 'https://admin.exchange.microsoft.com/'
+            }
+            elseif ($ControlName -match 'SharePoint|OneDrive') {
+                $optimizedUrl = 'https://admin.microsoft.com/sharepoint'
+            }
+            elseif ($ControlName -match 'Teams') {
+                $optimizedUrl = 'https://admin.teams.microsoft.com/'
+            }
+            elseif ($ControlName -match 'Conditional Access|MFA|Identity Protection|Azure AD|Entra') {
+                $optimizedUrl = 'https://aad.portal.azure.com/'
+            }
+            else {
+                $optimizedUrl = 'https://admin.microsoft.com/#/users'
+            }
+        }
+        elseif ($ControlName -match 'Defender|malware|virus|threat|phish|safe') {
+            $optimizedUrl = 'https://security.microsoft.com/'
+        }
+        elseif ($ControlName -match 'Compliance|DLP|audit|label|retention') {
+            $optimizedUrl = 'https://compliance.microsoft.com/'
+        }
+        elseif ($ControlName -match 'Intune|device|mobile') {
+            $optimizedUrl = 'https://intune.microsoft.com/'
+        }
+    }
 
     # Fix outdated portal URLs
     $optimizedUrl = $optimizedUrl -replace 'https://portal\.office\.com', 'https://admin.microsoft.com'
@@ -252,14 +348,11 @@ function Optimize-ActionUrl {
     }
 
     # Fix common Conditional Access URLs
-    if ($ControlName -match 'Conditional Access' -or $ControlName -match 'MFA') {
+    if ($ControlName -match 'Conditional Access|legacy authentication|block.*policy') {
         if ($optimizedUrl -match 'ConditionalAccess' -and $optimizedUrl -notmatch '#view') {
             $optimizedUrl = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
         }
     }
-
-    # Ensure Microsoft 365 Defender URLs are current
-    $optimizedUrl = $optimizedUrl -replace 'https://security\.microsoft\.com/([^?#]+)', 'https://security.microsoft.com/$1'
 
     return $optimizedUrl
 }
