@@ -339,6 +339,15 @@ Invoke-MicrosoftSecureScore
 
 ## 📝 Changelog
 
+### [1.3.0] - 2025-11-14
+**Major Enhancement:**
+- Added 40+ specific control-to-URL mappings for accurate configuration links
+- Configuration buttons now point to exact settings pages instead of documentation
+- Fixes critical issue where controls pointed to learn.microsoft.com instead of actual portals
+- Mapped controls across 7 major categories: Identity, Defender, Exchange, SharePoint, Teams, Compliance, Intune
+- Added intelligent fallback logic to route documentation links to appropriate portals
+- Example: "Ensure Administrative accounts are separate" now opens M365 Admin Users (filtered to admins) instead of documentation
+
 ### [1.2.5] - 2025-11-14
 **Enhanced:**
 - Added ActionUrl optimization to ensure Configuration buttons link to correct settings pages
