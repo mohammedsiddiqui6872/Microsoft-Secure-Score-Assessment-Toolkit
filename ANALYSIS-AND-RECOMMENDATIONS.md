@@ -26,15 +26,11 @@ This Microsoft Secure Score remediation toolkit is a well-architected PowerShell
 
 ## Critical Issues Found
 
-### 1. **HARDCODED TENANT IDs IN URLs** (High Priority)
-- **Problem**: 198 URLs contain hardcoded tenant ID `tid=3d4143ab-9069-4b65-aac6-6b3e2e08f0ff`
-- **Impact**: Links won't work for other organizations' tenants
-- **Affected URLs**:
-  - `security.microsoft.com/antispam?tid=3d4143ab...`
-  - `security.microsoft.com/antiphishing?tid=3d4143ab...`
-  - `compliance.microsoft.com/datalossprevention?tid=3d4143ab...`
-
-**Solution**: Remove tenant ID parameters or dynamically inject the current tenant's ID
+### 1. **~~HARDCODED TENANT IDs IN URLs~~** ✅ RESOLVED
+- **Problem**: 198 URLs previously contained hardcoded tenant IDs
+- **Impact**: Links wouldn't work for other organizations' tenants
+- **Resolution**: All hardcoded tenant IDs have been removed from the JSON data file
+- **Implementation**: Script now dynamically injects the current tenant's ID when generating reports
 
 ### 2. **Portal Links Require Authentication** (Medium Priority)
 - **Problem**: All `security.microsoft.com`, `aad.portal.azure.com`, `admin.teams.microsoft.com` links require authentication
@@ -68,14 +64,15 @@ This Microsoft Secure Score remediation toolkit is a well-architected PowerShell
 
 ### High Priority Enhancements
 
-#### 1. **Dynamic Tenant ID Injection**
+#### 1. **~~Dynamic Tenant ID Injection~~** ✅ IMPLEMENTED
 ```powershell
-# Current problem in JSON:
-"ActionUrl": "https://security.microsoft.com/antispam?tid=3d4143ab-9069-4b65-aac6-6b3e2e08f0ff"
+# Implementation in script (lines 279-280, 410-413):
+$script:currentTenantId = (Get-MgContext).TenantId
 
-# Proposed solution in script:
-$tenantId = (Get-MgContext).TenantId
-$actionUrl = $control.ActionUrl -replace 'tid=[a-f0-9-]+', "tid=$tenantId"
+# Replace hardcoded tenant IDs with current tenant ID
+if ($actionUrl -and $script:currentTenantId -and $actionUrl -match 'tid=') {
+    $actionUrl = $actionUrl -replace 'tid=[a-f0-9-]+', "tid=$script:currentTenantId"
+}
 ```
 
 #### 2. **Link Validation & Health Check**

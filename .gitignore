@@ -12,6 +12,11 @@ Cache/
 # CSV outputs
 ActionUrl-Analysis.csv
 
+# IDE/Editor
+.claude/
+.vscode/
+.vs/
+
 # Windows
 Thumbs.db
 desktop.ini
