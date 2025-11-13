@@ -339,6 +339,12 @@ Invoke-MicrosoftSecureScore
 
 ## 📝 Changelog
 
+### [1.2.4] - 2025-11-14
+**Fixed:**
+- Fixed overlapping Configuration and Documentation buttons in expanded control details
+- Added proper CSS class separation between floating action buttons and control detail buttons
+- Improved button layout with flex-wrap for better responsiveness
+
 ### [1.2.3] - 2025-11-14
 **Enhanced:**
 - Updated HTML report header to "Microsoft SECURE SCORE ASSESSMENT"
