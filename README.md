@@ -339,6 +339,14 @@ Invoke-MicrosoftSecureScore
 
 ## 📝 Changelog
 
+### [1.2.5] - 2025-11-14
+**Enhanced:**
+- Added ActionUrl optimization to ensure Configuration buttons link to correct settings pages
+- Automatically corrects outdated portal URLs (portal.office.com → admin.microsoft.com)
+- Updates old blade-style URLs to new view-style URLs for Entra ID
+- Fixes Conditional Access and MFA URLs to point directly to policy pages
+- Enhanced tenant context injection for all Azure portal URLs
+
 ### [1.2.4] - 2025-11-14
 **Fixed:**
 - Fixed overlapping Configuration and Documentation buttons in expanded control details
