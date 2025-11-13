@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-remediation-toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.2.5'
+ModuleVersion = '1.3.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -117,6 +117,55 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+## v1.3.0 - Comprehensive Configuration URL Mappings
+
+### Major Enhancement
+- Added 40+ specific control-to-URL mappings for accurate configuration links
+- Configuration buttons now point to exact settings pages instead of documentation
+- Fixes critical issue where controls pointed to learn.microsoft.com instead of portals
+
+### Control Categories Mapped
+**Identity & Access Management (16 controls)**
+- Administrative accounts → M365 Admin Users with admin filter
+- MFA/Conditional Access → Entra ID CA policies
+- Global admin management → Entra ID Roles
+- Password policies → Entra ID authentication settings
+- Identity Protection → Entra ID Identity Protection
+
+**Microsoft Defender (8 controls)**
+- Defender for Office 365, Endpoint configuration
+- Safe Attachments, Safe Links, Anti-phishing
+- Anti-malware policies
+
+**Exchange Online (4 controls)**
+- Modern authentication, Mailbox auditing
+- Spam and malware policies
+
+**SharePoint & OneDrive (4 controls)**
+- Modern authentication, B2B integration
+- Versioning, Access controls
+
+**Microsoft Teams (2 controls)**
+- Meeting policies, Safe Links
+
+**Compliance (4 controls)**
+- Purview Audit, DLP, Sensitivity labels
+
+**Intune (3 controls)**
+- Compliance policies, Device encryption
+
+### Intelligent Fallback
+- Detects documentation links (learn.microsoft.com)
+- Routes to appropriate portal based on control keywords
+- Ensures configuration pages over documentation
+
+### Example Fix
+**Before:** "Ensure Administrative accounts are separate and cloud-only"
+→ https://learn.microsoft.com/.../add-users (Documentation)
+
+**After:** "Ensure Administrative accounts are separate and cloud-only"
+→ https://admin.microsoft.com/#/users?isAdmin=true (Actual Config Page)
+
 ## v1.2.5 - ActionUrl Optimization
 
 ### Enhancement
