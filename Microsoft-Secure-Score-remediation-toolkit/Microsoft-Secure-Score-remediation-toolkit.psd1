@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-remediation-toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.2.4'
+ModuleVersion = '1.2.5'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -117,6 +117,22 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+## v1.2.5 - ActionUrl Optimization
+
+### Enhancement
+- Added Optimize-ActionUrl function to ensure Configuration buttons link to correct settings pages
+- Automatically corrects outdated portal URLs (portal.office.com, old blade-style URLs)
+- Updates Entra ID URLs to use aad.portal.azure.com
+- Fixes Conditional Access and MFA URLs to point directly to policy pages
+- Enhanced tenant context injection for all Azure portal URLs
+- Ensures users always land in the correct tenant when clicking Configuration buttons
+
+### URL Transformations
+- portal.office.com → admin.microsoft.com
+- Old blade URLs → New view URLs for Entra ID
+- Standardized Conditional Access URLs
+- Improved Microsoft 365 Defender URL handling
+
 ## v1.2.4 - Button Layout Fix
 
 ### Bug Fix

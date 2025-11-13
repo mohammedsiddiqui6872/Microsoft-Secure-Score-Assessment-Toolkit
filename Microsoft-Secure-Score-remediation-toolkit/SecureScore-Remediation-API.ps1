@@ -228,6 +228,42 @@ function ConvertFrom-HtmlString {
     return $text
 }
 
+function Optimize-ActionUrl {
+    param(
+        [string]$Url,
+        [string]$ControlName,
+        [string]$TenantId
+    )
+
+    if ([string]::IsNullOrEmpty($Url)) {
+        return $Url
+    }
+
+    # Common URL corrections and optimizations
+    $optimizedUrl = $Url
+
+    # Fix outdated portal URLs
+    $optimizedUrl = $optimizedUrl -replace 'https://portal\.office\.com', 'https://admin.microsoft.com'
+    $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com/#blade/Microsoft_AAD_IAM', 'https://aad.portal.azure.com/#view/Microsoft_AAD_IAM'
+
+    # Ensure Entra ID (Azure AD) URLs use the correct portal
+    if ($optimizedUrl -match 'Microsoft_AAD' -and $optimizedUrl -notmatch 'aad\.portal\.azure\.com') {
+        $optimizedUrl = $optimizedUrl -replace 'https://portal\.azure\.com', 'https://aad.portal.azure.com'
+    }
+
+    # Fix common Conditional Access URLs
+    if ($ControlName -match 'Conditional Access' -or $ControlName -match 'MFA') {
+        if ($optimizedUrl -match 'ConditionalAccess' -and $optimizedUrl -notmatch '#view') {
+            $optimizedUrl = 'https://aad.portal.azure.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies'
+        }
+    }
+
+    # Ensure Microsoft 365 Defender URLs are current
+    $optimizedUrl = $optimizedUrl -replace 'https://security\.microsoft\.com/([^?#]+)', 'https://security.microsoft.com/$1'
+
+    return $optimizedUrl
+}
+
 #endregion
 
 #region Module Installation and Connection
@@ -418,9 +454,28 @@ foreach ($control in $controls) {
     $category = $control.ControlCategory
     $actionUrl = $control.ActionUrl
 
-    # Replace hardcoded tenant IDs with current tenant ID
-    if ($actionUrl -and $script:currentTenantId -and $actionUrl -match 'tid=') {
-        $actionUrl = $actionUrl -replace 'tid=[a-f0-9-]+', "tid=$script:currentTenantId"
+    # Optimize and enhance ActionUrl
+    if ($actionUrl) {
+        # First optimize the URL (fix outdated URLs, etc.)
+        $actionUrl = Optimize-ActionUrl -Url $actionUrl -ControlName $title -TenantId $script:currentTenantId
+
+        # Then add proper tenant context
+        if ($script:currentTenantId) {
+            # Replace existing tenant ID if present
+            if ($actionUrl -match 'tid=') {
+                $actionUrl = $actionUrl -replace 'tid=[a-f0-9-]+', "tid=$script:currentTenantId"
+            }
+            # Add tenant ID to Azure portal URLs that don't have it
+            elseif ($actionUrl -match '^https://(portal\.azure\.com|aad\.portal\.azure\.com)') {
+                if ($actionUrl -match '\?') {
+                    $actionUrl = $actionUrl -replace '\?', "?tid=$script:currentTenantId&"
+                } elseif ($actionUrl -match '#') {
+                    $actionUrl = $actionUrl -replace '#', "?tid=$script:currentTenantId#"
+                } else {
+                    $actionUrl += "?tid=$script:currentTenantId"
+                }
+            }
+        }
     }
 
     $maxScore = $control.MaxScore
