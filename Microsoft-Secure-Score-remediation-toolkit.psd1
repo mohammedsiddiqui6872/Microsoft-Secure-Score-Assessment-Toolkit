@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-remediation-toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.2.1'
+ModuleVersion = '1.2.2'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -117,6 +117,13 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+## v1.2.2 - Complete Syntax Fix
+
+### Bug Fix
+- Removed parentheses and special characters causing PowerShell parsing errors
+- Module now imports and loads correctly without any errors
+- All three functions available: Connect-MicrosoftSecureScore, Invoke-MicrosoftSecureScore, Get-MicrosoftSecureScoreInfo
+
 ## v1.2.1 - Syntax Fix
 
 ### Bug Fix

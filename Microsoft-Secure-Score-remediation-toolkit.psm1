@@ -164,7 +164,7 @@ function Invoke-MicrosoftSecureScore {
 
     Write-Host "`n=== Microsoft Secure Score Assessment ===" -ForegroundColor Cyan
     Write-Host "Tenant: $TenantName" -ForegroundColor Yellow
-    Write-Host "Mode: $(if ($ApplicableOnly) { 'Applicable Controls Only' } else { 'All Controls (411 plus)' })" -ForegroundColor Yellow
+    Write-Host "Mode: $(if ($ApplicableOnly) { 'Applicable Controls Only' } else { 'All 411 Controls' })" -ForegroundColor Yellow
 
     # Build parameters for the main script
     $scriptPath = Join-Path $PSScriptRoot "SecureScore-Remediation-API.ps1"
@@ -213,7 +213,7 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host "╚════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
 
     Write-Host "`nDESCRIPTION:" -ForegroundColor Yellow
-    Write-Host "  Generate comprehensive security reports with 411 plus Microsoft" -ForegroundColor White
+    Write-Host "  Generate comprehensive security reports with over 400 Microsoft" -ForegroundColor White
     Write-Host "  Secure Score controls fetched directly from Microsoft Graph API." -ForegroundColor White
 
     Write-Host "`nQUICK START:" -ForegroundColor Yellow
@@ -221,7 +221,7 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host "     Authenticate to Microsoft Graph" -ForegroundColor Gray
     Write-Host ""
     Write-Host "  2. Invoke-MicrosoftSecureScore" -ForegroundColor Green
-    Write-Host "     Generate full assessment report (411 plus controls)" -ForegroundColor Gray
+    Write-Host "     Generate full assessment report with 411 controls" -ForegroundColor Gray
 
     Write-Host "`nCOMMON EXAMPLES:" -ForegroundColor Yellow
     Write-Host "  # Full report with all controls" -ForegroundColor Gray
