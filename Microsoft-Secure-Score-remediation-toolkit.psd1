@@ -12,13 +12,13 @@
 RootModule = 'Microsoft-Secure-Score-remediation-toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.2.0'
+ModuleVersion = '1.2.1'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
 
 # ID used to uniquely identify this module
-GUID = 'b3c4d5e6-f7g8-9h0i-jklm-n1o2p3q4r5s6'
+GUID = 'd61fcf0d-d7d1-4d29-a107-a8709c612d47'
 
 # Author of this module
 Author = 'Mohammed Siddiqui'
@@ -94,10 +94,8 @@ AliasesToExport = @()
 FileList = @(
     'Microsoft-Secure-Score-remediation-toolkit.psm1',
     'SecureScore-Remediation-API.ps1',
-    'SecureScore-API-Controls.json',
     'README.md',
-    'CHANGELOG.md',
-    'LICENSE'
+    'CHANGELOG.md'
 )
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
@@ -119,6 +117,12 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+## v1.2.1 - Syntax Fix
+
+### Bug Fix
+- Fixed PowerShell parsing error with "+" character in Write-Host strings
+- Module now imports correctly without errors
+
 ## v1.2.0 - PowerShell Gallery Release with Module Functions
 
 ### Major Enhancement - Proper PowerShell Module Structure
