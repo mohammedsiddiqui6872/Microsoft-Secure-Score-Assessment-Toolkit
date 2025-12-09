@@ -2,9 +2,9 @@
 *.log
 Logs/
 
-# Reports
+# Generated Reports (exclude HTML reports but keep Reports/ module code)
 *.html
-Reports/
+SecureScore-Report-*/
 
 # Cache
 Cache/

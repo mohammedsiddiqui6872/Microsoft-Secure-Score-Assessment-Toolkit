@@ -1,0 +1,1714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microsoft Secure Score Assessment Dashboard - {{TENANT_NAME}}</title>
+    
+    <!-- Professional Font Stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Modern Color Palette */
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #0fb881 0%, #10dc88 100%);
+            --warning-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            --danger-gradient: linear-gradient(135deg, #eb3b5a 0%, #fc5c65 100%);
+            --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            
+            --bg-primary: #0a0b0d;
+            --bg-secondary: #141519;
+            --bg-tertiary: #1a1b21;
+            --bg-card: #1e1f26;
+            --bg-hover: #25262e;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2cf;
+            --text-tertiary: #6b7280;
+            
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.15);
+            
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.7);
+            --shadow-glow: 0 0 30px rgba(102, 126, 234, 0.3);
+            
+            --animation-fast: 0.2s;
+            --animation-normal: 0.3s;
+            --animation-slow: 0.5s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(240, 147, 251, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(79, 172, 254, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            animation: backgroundPulse 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Main Container */
+        .dashboard-wrapper {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+        }
+
+        /* Enhanced Header */
+        .header {
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, rgba(20, 21, 25, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: white;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: logoShine 3s ease-in-out infinite;
+        }
+
+        @keyframes logoShine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, #ffffff 0%, #a8b2cf 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.025em;
+            margin: 0;
+        }
+
+        .header-right {
+            position: relative;
+        }
+
+        /* Tenant Dropdown Button */
+        .tenant-dropdown {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all var(--animation-normal) ease;
+            min-width: 280px;
+            justify-content: space-between;
+        }
+
+        .tenant-dropdown:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .tenant-dropdown.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .tenant-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            letter-spacing: 0.025em;
+        }
+
+        .dropdown-arrow {
+            transition: transform var(--animation-normal) ease;
+            color: var(--text-secondary);
+        }
+
+        .tenant-dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown Menu - Compacted */
+        .tenant-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 320px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--animation-normal) ease;
+            z-index: 1001;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .tenant-dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.4rem 0.75rem;
+            border-radius: 6px;
+            transition: background var(--animation-fast) ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown-label {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.15rem;
+            line-height: 1.2;
+        }
+
+        .dropdown-value {
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .dropdown-value.score-highlight {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .dropdown-value.compliance-highlight {
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 0.25rem 0;
+        }
+
+        /* Score Hero Section */
+        .hero-section {
+            padding: 2rem;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .score-visualization {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 0;
+        }
+
+        /* Circular Score Indicator */
+        .circular-score {
+            position: relative;
+            width: 220px;
+            height: 220px;
+        }
+
+        .circular-score svg {
+            transform: rotate(-90deg);
+            filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.2));
+        }
+
+        .score-ring {
+            fill: none;
+            stroke-width: 16;
+        }
+
+        .score-ring-bg {
+            stroke: rgba(255, 255, 255, 0.05);
+        }
+
+        .score-ring-progress {
+            stroke: url(#scoreGradient);
+            stroke-linecap: round;
+            stroke-dasharray: 628;
+            stroke-dashoffset: 628;
+            animation: fillScore 2s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fillScore {
+            to {
+                stroke-dashoffset: {{STROKE_DASHOFFSET}};
+            }
+        }
+
+        .score-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .score-percentage {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .score-current {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-top: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Microsoft Secure Score Cards */
+        .score-cards-container {
+            background: transparent;
+            padding: 0;
+        }
+
+        .score-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.025em;
+        }
+
+        .score-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .score-card {
+            background: #1a1b21;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all var(--animation-normal) ease;
+        }
+
+        .score-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .score-card-label {
+            font-size: 0.7rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .score-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-card-value.current {
+            color: #4ade80;
+        }
+
+        .score-card-value.maximum {
+            color: #60a5fa;
+        }
+
+        .score-card-value.percentage {
+            color: #fbbf24;
+        }
+
+        .score-card-value.compliance {
+            color: #4ade80;
+        }
+
+        /* Control Distribution Chart */
+        .distribution-chart {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .distribution-chart::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .chart-header {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .bar-chart {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 180px;
+            gap: 1rem;
+        }
+
+        .bar-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bar {
+            width: 100%;
+            background: var(--primary-gradient);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--animation-normal) ease;
+            cursor: pointer;
+            animation: growBar 1s ease-out forwards;
+            animation-delay: calc(var(--bar-index) * 0.1s);
+            transform-origin: bottom;
+            transform: scaleY(0);
+        }
+
+        @keyframes growBar {
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        .bar:hover {
+            transform: scaleY(1.05) !important;
+            filter: brightness(1.2);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--text-primary);
+        }
+
+        .bar-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .bar-compliant { background: var(--success-gradient); }
+        .bar-non-compliant { background: var(--danger-gradient); }
+        .bar-high { background: var(--danger-gradient); }
+        .bar-medium { background: var(--warning-gradient); }
+        .bar-low { background: var(--info-gradient); }
+        .bar-na { background: linear-gradient(135deg, #434343 0%, #262626 100%); }
+
+
+        /* Control Categories Section */
+        .categories-section {
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 2rem;
+            flex-wrap: nowrap;
+        }
+
+        /* Filter Buttons */
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter-group {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.25rem;
+            gap: 0.25rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--animation-fast) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-btn.active::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+        }
+
+        /* Search Box */
+        .search-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            width: 250px;
+            transition: all var(--animation-normal) ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+        }
+
+        /* Control Cards */
+        .controls-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .control-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all var(--animation-normal) ease;
+            position: relative;
+        }
+
+        .control-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--control-gradient);
+            opacity: 0;
+            transition: opacity var(--animation-normal) ease;
+        }
+
+        .control-card:hover::before {
+            opacity: 1;
+        }
+
+        .control-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--border-hover);
+        }
+
+        .control-card.status-compliant { --control-gradient: var(--success-gradient); }
+        .control-card.status-noncompliant { --control-gradient: var(--danger-gradient); }
+        .control-card.status-na { --control-gradient: linear-gradient(135deg, #434343 0%, #262626 100%); }
+
+        .control-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            cursor: pointer;
+        }
+
+        .control-info {
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .control-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .control-meta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-category {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-badges {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .badge-status-compliant {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .badge-status-noncompliant {
+            background: var(--danger-gradient);
+            color: white;
+        }
+
+        .badge-status-na {
+            background: linear-gradient(135deg, #434343 0%, #262626 100%);
+            color: white;
+        }
+
+        .badge-risk-high {
+            background: var(--danger-gradient);
+            color: white;
+        }
+
+        .badge-risk-medium {
+            background: var(--warning-gradient);
+            color: white;
+        }
+
+        .badge-risk-low {
+            background: var(--info-gradient);
+            color: white;
+        }
+
+        .impact-score {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .expand-toggle {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--animation-fast) ease;
+        }
+
+        .expand-toggle:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .expand-toggle svg {
+            transition: transform var(--animation-normal) ease;
+        }
+
+        .control-card.expanded .expand-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        /* Control Details */
+        .control-details {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+            animation: slideDown var(--animation-normal) ease;
+        }
+
+        .control-card.expanded .control-details {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .justification-box {
+            background: rgba(102, 126, 234, 0.05);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all var(--animation-normal) ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .action-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .action-btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .action-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .action-btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Floating Action Menu */
+        .floating-menu {
+            position: fixed;
+            right: 2rem;
+            bottom: 2rem;
+            z-index: 999;
+        }
+
+        .fab-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5b7dd6 0%, #4a69bb 100%);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(91, 125, 214, 0.3);
+            transition: all var(--animation-normal) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fab-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 4s linear infinite;
+        }
+
+        .fab-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(91, 125, 214, 0.5);
+        }
+
+        .fab-button span {
+            transition: transform var(--animation-normal) ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .floating-menu.active .fab-button span {
+            transform: rotate(45deg);
+        }
+
+        .fab-menu {
+            position: absolute;
+            bottom: 75px;
+            right: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8) translateY(20px);
+            transition: all var(--animation-normal) ease;
+        }
+
+        .floating-menu.active .fab-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+
+        .fab-menu-item {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5b7dd6 0%, #4a69bb 100%);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 3px 10px rgba(91, 125, 214, 0.3);
+            transition: all var(--animation-normal) ease;
+            position: relative;
+            animation: fadeInScale 0.3s ease forwards;
+            opacity: 0;
+        }
+
+        .floating-menu.active .fab-menu-item {
+            opacity: 1;
+        }
+
+        .floating-menu.active .fab-menu-item:nth-child(1) { animation-delay: 0.05s; }
+        .floating-menu.active .fab-menu-item:nth-child(2) { animation-delay: 0.1s; }
+        .floating-menu.active .fab-menu-item:nth-child(3) { animation-delay: 0.15s; }
+        .floating-menu.active .fab-menu-item:nth-child(4) { animation-delay: 0.2s; }
+        .floating-menu.active .fab-menu-item:nth-child(5) { animation-delay: 0.25s; }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .fab-menu-item:hover {
+            transform: translateX(-5px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(91, 125, 214, 0.5);
+        }
+
+        .fab-menu-item svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .fab-tooltip {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2c2d33;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--animation-fast) ease;
+            pointer-events: none;
+        }
+
+        .fab-menu-item:hover .fab-tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(-5px);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            letter-spacing: 0.025em;
+        }
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--animation-normal) ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-top-color: #764ba2;
+            animation-delay: 0.2s;
+        }
+
+        .loader-ring:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border-top-color: #f093fb;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .section-header {
+                padding: 0 1rem;
+            }
+            
+            .filter-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            .search-input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .score-visualization {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .score-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-group {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .filter-controls {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .score-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .tenant-card {
+                width: 100%;
+            }
+            
+            .score-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .floating-menu,
+            .filter-controls,
+            .search-container {
+                display: none;
+            }
+
+            .control-card {
+                page-break-inside: avoid;
+                border: 1px solid #ccc;
+                margin-bottom: 1rem;
+            }
+
+            .control-details {
+                display: block !important;
+            }
+        }
+
+        /* Animations for Scrolling */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader">
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+        </div>
+    </div>
+
+    <div class="dashboard-wrapper">
+        <!-- Enhanced Header -->
+        <header class="header">
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="logo-container">
+                        <div class="logo">MS</div>
+                        <div class="header-title">
+                            <h1>Microsoft Secure Score Assessment Dashboard</h1>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="tenant-dropdown" onclick="toggleTenantDropdown(event)">
+                        <span class="tenant-name">{{TENANT_NAME}}</span>
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="tenant-dropdown-menu" id="tenantDropdown">
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Tenant Name</div>
+                            <div class="dropdown-value">{{TENANT_NAME}}</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Tenant ID</div>
+                            <div class="dropdown-value">{{TENANT_ID}}</div>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Generated By</div>
+                            <div class="dropdown-value">{{RUN_BY_USER}}</div>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Report Date</div>
+                            <div class="dropdown-value">{{REPORT_DATE}}</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Total Controls</div>
+                            <div class="dropdown-value">{{TOTAL_CHECKS}} controls assessed</div>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Data Source</div>
+                            <div class="dropdown-value">Microsoft Graph Secure Score API</div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Current Score</div>
+                            <div class="dropdown-value score-highlight">{{CURRENT_SCORE}} / {{MAX_SCORE}} ({{SCORE_PERCENTAGE}}%)</div>
+                        </div>
+                        <div class="dropdown-item">
+                            <div class="dropdown-label">Compliance Rate</div>
+                            <div class="dropdown-value compliance-highlight">{{COMPLIANCE_PERCENTAGE}}% ({{COMPLIANT}} of {{TOTAL_CHECKS}})</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section with Score Visualization -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="score-visualization">
+                    <!-- Circular Score Indicator -->
+                    <div class="circular-score fade-in">
+                        <svg width="220" height="220">
+                            <defs>
+                                <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="score-ring score-ring-bg" cx="110" cy="110" r="100"></circle>
+                            <circle class="score-ring score-ring-progress" cx="110" cy="110" r="100"></circle>
+                        </svg>
+                        <div class="score-center">
+                            <div class="score-percentage">{{SCORE_PERCENTAGE}}%</div>
+                            <div class="score-label">Security Score</div>
+                            <div class="score-current">{{CURRENT_SCORE}} / {{MAX_SCORE}}</div>
+                        </div>
+                    </div>
+
+                    <!-- Microsoft Secure Score Cards -->
+                    <div class="score-cards-container fade-in">
+                        <h2 class="score-section-title">Microsoft Secure Score</h2>
+                        <div class="score-cards-grid">
+                            <div class="score-card">
+                                <div class="score-card-label">CURRENT SCORE</div>
+                                <div class="score-card-value current">{{CURRENT_SCORE}}</div>
+                            </div>
+                            <div class="score-card">
+                                <div class="score-card-label">MAXIMUM SCORE</div>
+                                <div class="score-card-value maximum">{{MAX_SCORE}}</div>
+                            </div>
+                            <div class="score-card">
+                                <div class="score-card-label">SCORE PERCENTAGE</div>
+                                <div class="score-card-value percentage">{{SCORE_PERCENTAGE}}%</div>
+                            </div>
+                            <div class="score-card">
+                                <div class="score-card-label">COMPLIANCE RATE</div>
+                                <div class="score-card-value compliance">{{COMPLIANCE_PERCENTAGE}}%</div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </section>
+
+        <!-- Control Categories Section -->
+        <section class="categories-section">
+            <div class="section-header">
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <button class="filter-btn active" onclick="filterByStatus('all')">All</button>
+                        <button class="filter-btn" onclick="filterByStatus('compliant')">Compliant</button>
+                        <button class="filter-btn" onclick="filterByStatus('noncompliant')">Non-Compliant</button>
+                        <button class="filter-btn" onclick="filterByStatus('na')">Not Applicable</button>
+                    </div>
+                    <div class="filter-group">
+                        <button class="filter-btn" onclick="filterByRisk('high')">High Risk</button>
+                        <button class="filter-btn" onclick="filterByRisk('medium')">Medium Risk</button>
+                        <button class="filter-btn" onclick="filterByRisk('low')">Low Risk</button>
+                    </div>
+                    <div class="search-container">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="search-input" placeholder="Search controls..." oninput="searchControls(this.value)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-grid" id="controlsGrid">
+                {{CONTROL_CARDS}}
+            </div>
+        </section>
+
+        <!-- Floating Action Menu -->
+        <div class="floating-menu" id="floatingMenu">
+            <div class="fab-menu">
+                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit" target="_blank" class="fab-menu-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span class="fab-tooltip">View on GitHub</span>
+                </a>
+                <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues" target="_blank" class="fab-menu-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span class="fab-tooltip">Report Issues</span>
+                </a>
+                <a href="https://www.linkedin.com/in/mohammedsiddiqui6872/" target="_blank" class="fab-menu-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="fab-tooltip">Let's Chat on LinkedIn!</span>
+                </a>
+                <a href="https://www.linkedin.com/in/mohammedsiddiqui6872/" target="_blank" class="fab-menu-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                    <span class="fab-tooltip">Connect on LinkedIn</span>
+                </a>
+                <a href="https://buymeacoffee.com/mohammedsiddiqui" target="_blank" class="fab-menu-item">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M4 3h12c.55 0 1 .45 1 1v7c0 2.76-2.24 5-5 5H8c-2.76 0-5-2.24-5-5V4c0-.55.45-1 1-1zm0 5v3c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V8H4zm12-3H4V4h12v1z"/>
+                        <rect x="9" y="17" width="2" height="2" rx="1"/>
+                    </svg>
+                    <span class="fab-tooltip">Buy Me a Coffee</span>
+                </a>
+            </div>
+            <button class="fab-button" onclick="toggleFabMenu()">
+                <span>+</span>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-text">
+                    Microsoft Secure Score Assessment Toolkit | Generated {{REPORT_DATE}} | {{TOTAL_CHECKS}} controls | Run by: {{RUN_BY_USER}}
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading overlay
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+            }, 1000);
+
+            // Animate elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.control-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+
+        // Toggle tenant dropdown
+        function toggleTenantDropdown(event) {
+            event.stopPropagation();
+            const dropdown = event.currentTarget;
+            const menu = document.getElementById('tenantDropdown');
+            
+            dropdown.classList.toggle('active');
+            menu.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.tenant-dropdown');
+            const menu = document.getElementById('tenantDropdown');
+            
+            if (dropdown && menu && !dropdown.contains(event.target) && !menu.contains(event.target)) {
+                dropdown.classList.remove('active');
+                menu.classList.remove('show');
+            }
+        });
+
+        // Toggle control card expansion
+        function toggleControl(element) {
+            const card = element.closest('.control-card');
+            card.classList.toggle('expanded');
+        }
+
+        // Filter controls by status
+        function filterByStatus(status) {
+            const cards = document.querySelectorAll('.control-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.classList.add('fade-in'), 10);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter controls by risk level
+        function filterByRisk(risk) {
+            const cards = document.querySelectorAll('.control-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (card.dataset.risk === risk) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.classList.add('fade-in'), 10);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Search controls
+        function searchControls(query) {
+            const cards = document.querySelectorAll('.control-card');
+            const searchTerm = query.toLowerCase();
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.control-title').textContent.toLowerCase();
+                const category = card.querySelector('.control-category').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || category.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.classList.add('fade-in'), 10);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Toggle floating action menu
+        function toggleFabMenu() {
+            const menu = document.getElementById('floatingMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Export report functionality
+        function exportReport() {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').classList.add('active');
+            
+            // Simulate export process
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+                alert('Report exported successfully!');
+            }, 2000);
+        }
+
+        // Print report
+        function printReport() {
+            window.print();
+        }
+
+        // Refresh data
+        function refreshData() {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').classList.add('active');
+            
+            // Simulate data refresh
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+                location.reload();
+            }, 1500);
+        }
+
+        // Show help
+        function showHelp() {
+            alert('Help & Support\n\nFor assistance, please contact:\nsupport@gritservices.ae\n\nDocumentation available at:\nhttps://docs.microsoft.com/graph/api/');
+        }
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            // ESC key closes floating menu
+            if (e.key === 'Escape') {
+                document.getElementById('floatingMenu').classList.remove('active');
+            }
+            
+            // Ctrl/Cmd + P for print
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                printReport();
+            }
+            
+            // Ctrl/Cmd + E for export
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                exportReport();
+            }
+        });
+
+        // Add real-time clock
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            // You can add a clock element if needed
+        }
+        setInterval(updateClock, 1000);
+
+        // Performance monitoring
+        window.addEventListener('load', function() {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            console.log(`Page load time: ${loadTime}ms`);
+        });
+    </script>
+</body>
+</html>

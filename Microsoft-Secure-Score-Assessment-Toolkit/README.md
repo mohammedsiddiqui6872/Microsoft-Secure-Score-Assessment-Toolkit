@@ -1,13 +1,13 @@
-# Microsoft Secure Score Remediation Toolkit
+# Microsoft Secure Score Assessment Toolkit
 
-[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Microsoft-Secure-Score-remediation-toolkit?label=PowerShell%20Gallery)](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-remediation-toolkit)
-[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/Microsoft-Secure-Score-remediation-toolkit?label=Downloads)](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-remediation-toolkit)
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/Microsoft-Secure-Score-Assessment-Toolkit?label=PowerShell%20Gallery)](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-Assessment-Toolkit)
+[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/Microsoft-Secure-Score-Assessment-Toolkit?label=Downloads)](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-Assessment-Toolkit)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%20%7C%207%2B-blue)](https://github.com/PowerShell/PowerShell)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![CIS Benchmark](https://img.shields.io/badge/CIS%20Benchmark-Compatible-orange)](https://www.cisecurity.org/)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow.svg)](https://buymeacoffee.com/mohammedsiddiqui)
 
-A powerful PowerShell module for assessing and managing Microsoft 365 security posture through the Microsoft Secure Score API. Generate comprehensive, interactive HTML reports with 411+ security controls directly from Microsoft Graph API.
+A powerful PowerShell module for assessing Microsoft 365 security posture through the Microsoft Secure Score API. Generate comprehensive, interactive HTML reports with 411+ security controls directly from Microsoft Graph API.
 
 ---
 
@@ -36,7 +36,7 @@ A powerful PowerShell module for assessing and managing Microsoft 365 security p
 - **Tenant Attribution**: Shows tenant ID and user who generated the report
 - **Category Organization**: Controls grouped by security domains (Identity, Data, Device, Apps, Infrastructure)
 - **Risk-Based Prioritization**: Controls categorized as High, Medium, or Low risk
-- **Portal Links**: Direct links to Microsoft 365 admin portals for remediation
+- **Portal Links**: Direct links to Microsoft 365 admin portals for configuration
 
 ---
 
@@ -46,13 +46,13 @@ A powerful PowerShell module for assessing and managing Microsoft 365 security p
 
 ```powershell
 # Install the module
-Install-Module -Name Microsoft-Secure-Score-remediation-toolkit -Scope CurrentUser
+Install-Module -Name Microsoft-Secure-Score-Assessment-Toolkit -Scope CurrentUser
 
 # Update to latest version (recommended to always use latest)
-Update-Module -Name Microsoft-Secure-Score-remediation-toolkit -Force
+Update-Module -Name Microsoft-Secure-Score-Assessment-Toolkit -Force
 
 # Verify installation
-Get-Module -ListAvailable Microsoft-Secure-Score-remediation-toolkit
+Get-Module -ListAvailable Microsoft-Secure-Score-Assessment-Toolkit
 ```
 
 ### 💖 Support This Project
@@ -205,7 +205,7 @@ Invoke-MicrosoftSecureScore -TenantName "Fabrikam Inc" -ReportPath "C:\Reports\F
 ```powershell
 # Create a scheduled task to run daily
 $scriptBlock = {
-    Import-Module Microsoft-Secure-Score-remediation-toolkit
+    Import-Module Microsoft-Secure-Score-Assessment-Toolkit
     Connect-MicrosoftSecureScore
     Invoke-MicrosoftSecureScore -ReportPath "C:\Reports\Daily-SecureScore-$(Get-Date -Format 'yyyyMMdd').html"
 }
@@ -232,7 +232,7 @@ The report includes **6 summary cards** in a single row:
 Click any summary card to instantly filter the entire report:
 - Focus on high-risk items for immediate attention
 - Review compliant controls for validation
-- Identify non-compliant controls for remediation planning
+- Identify non-compliant controls for improvement planning
 - Click again to clear the filter
 
 ### Detailed Control Information
@@ -311,8 +311,8 @@ Connect-MicrosoftSecureScore
 
 ```powershell
 # Uninstall and reinstall
-Uninstall-Module Microsoft-Secure-Score-remediation-toolkit -AllVersions
-Install-Module Microsoft-Secure-Score-remediation-toolkit -Force
+Uninstall-Module Microsoft-Secure-Score-Assessment-Toolkit -AllVersions
+Install-Module Microsoft-Secure-Score-Assessment-Toolkit -Force
 ```
 
 ### Permission Denied
@@ -457,7 +457,7 @@ This toolkit is not affiliated with or endorsed by Microsoft Corporation. Micros
 
 ## 🔗 Links
 
-- 📦 [PowerShell Gallery](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-remediation-toolkit)
+- 📦 [PowerShell Gallery](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-Assessment-Toolkit)
 - 🐙 [GitHub Repository](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit)
 - 🐛 [Report Issues](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues)
 - 💬 [Submit Feedback](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new)

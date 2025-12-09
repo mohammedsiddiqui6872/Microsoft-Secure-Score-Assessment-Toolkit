@@ -1,0 +1,127 @@
+{
+  "controlMappings": {
+    "Identity": {
+      "Ensure Administrative accounts are separate and cloud-only": "https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/AllUsers",
+      "Designate more than one global admin": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles",
+      "Ensure fewer than 5 global admins": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles",
+      "Ensure that between two and four global admins are designated": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/RolesManagementMenuBlade/~/AllRoles",
+      "Ensure multifactor authentication is enabled for all users in administrative roles": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Require MFA for admins": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Require MFA for administrative roles": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Block legacy authentication": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Enable Conditional Access policies to block legacy authentication": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Use a Conditional Access policy to block all apps for guest users": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Configure Conditional Access policies": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Require authentication strength for MFA": "https://entra.microsoft.com/#view/Microsoft_AAD_ConditionalAccess/ConditionalAccessBlade/~/Policies",
+      "Enable user risk policy": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy",
+      "Enable sign-in risk policy": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy",
+      "Enable Azure AD Identity Protection user risk policies": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/UserRiskPolicy",
+      "Enable Azure AD Identity Protection sign-in risk policies": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/SignInRiskPolicy",
+      "Enable Microsoft Entra ID Identity Protection": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/IdentityProtectionMenuBlade/~/Overview",
+      "Enable self-service password reset": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/PasswordResetMenuBlade/~/Properties",
+      "Ensure custom banned passwords lists are used": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection",
+      "Enable password protection for on-premises Active Directory": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/PasswordProtection",
+      "Ensure authentication methods are managed for all users": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/AdminAuthMethods",
+      "Enable Privileged Identity Management": "https://entra.microsoft.com/#view/Microsoft_Azure_PIMCommon/ResourceMenuBlade/~/MyActions/resourceId//resourceType/tenant/provider/aadroles",
+      "Enable Security Defaults": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Properties",
+      "Do not allow users to grant consent to unmanaged applications": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings",
+      "Ensure the admin consent workflow is enabled": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/AdminConsentSettings",
+      "Restrict access to Azure AD administration portal": "https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/UserSettings"
+    },
+    "Defender": {
+      "Turn on Microsoft Defender for Office 365": "https://security.microsoft.com/threatpolicy",
+      "Turn on Safe Attachments": "https://security.microsoft.com/safeattachmentv2",
+      "Turn on Safe Links for Office applications": "https://security.microsoft.com/safelinksv2",
+      "Enable Safe Links for email": "https://security.microsoft.com/safelinksv2",
+      "Set up Safe Links for Microsoft Teams": "https://security.microsoft.com/safelinksv2",
+      "Enable anti-phishing protection": "https://security.microsoft.com/antiphishing",
+      "Enable anti-malware policies": "https://security.microsoft.com/antimalwarev2",
+      "Ensure Exchange Online Spam Policies are set correctly": "https://security.microsoft.com/antispam",
+      "Set up SPF to prevent spoofing": "https://security.microsoft.com/dnsrecords",
+      "Configure DKIM for email authentication": "https://security.microsoft.com/dkimv2",
+      "Configure DMARC for email authentication": "https://security.microsoft.com/dmarc",
+      "Turn on Microsoft Defender for Endpoint": "https://security.microsoft.com/preferences2/onboarding",
+      "Enable Microsoft Defender Antivirus real-time protection": "https://security.microsoft.com/preferences2/endpoint_security_policy",
+      "Turn on cloud-delivered protection": "https://security.microsoft.com/preferences2/endpoint_security_policy",
+      "Enable mailbox auditing": "https://security.microsoft.com/auditlogsearch",
+      "Enable Microsoft Defender for Cloud Apps": "https://security.microsoft.com/cloudapps/settings",
+      "Turn on Defender for Cloud Apps": "https://security.microsoft.com/cloudapps/settings",
+      "Connect third-party cloud apps to Defender for Cloud Apps": "https://security.microsoft.com/cloudapps/app-connectors"
+    },
+    "Exchange": {
+      "Ensure modern authentication for Exchange Online is enabled": "https://admin.exchange.microsoft.com/#/organizationsettings",
+      "Create mail flow rules to restrict or filter emails": "https://admin.exchange.microsoft.com/#/transportrules",
+      "Ensure mail transport rules do not whitelist specific domains": "https://admin.exchange.microsoft.com/#/transportrules"
+    },
+    "SharePoint": {
+      "Ensure modern authentication for SharePoint applications is required": "https://admin.microsoft.com/sharepoint?page=sharing&modern=true",
+      "Ensure SharePoint and OneDrive integration with Azure AD B2B is enabled": "https://admin.microsoft.com/sharepoint?page=sharing&modern=true",
+      "Enable versioning on SharePoint document libraries": "https://admin.microsoft.com/sharepoint",
+      "Block download of content from OneDrive on unmanaged devices": "https://admin.microsoft.com/sharepoint?page=sharing&modern=true",
+      "Ensure external domains are restricted in the SharePoint and OneDrive sharing settings": "https://admin.microsoft.com/sharepoint?page=sharing&modern=true"
+    },
+    "Groups": {
+      "Ensure Microsoft 365 group creation is restricted": "https://admin.microsoft.com/#/Settings/Services/:/Settings/L1/O365Groups",
+      "Manage who can create Microsoft 365 groups": "https://admin.microsoft.com/#/Settings/Services/:/Settings/L1/O365Groups"
+    },
+    "Teams": {
+      "Ensure modern authentication for Microsoft Teams is enabled": "https://admin.teams.microsoft.com/policies/authentication"
+    },
+    "Compliance": {
+      "Enable Microsoft Purview Audit (Standard)": "https://compliance.microsoft.com/auditlogsearch",
+      "Enable Microsoft Purview Audit (Premium)": "https://compliance.microsoft.com/auditlogsearch",
+      "Turn on audit log search": "https://compliance.microsoft.com/auditlogsearch",
+      "Enable the Microsoft 365 Management Activity API": "https://compliance.microsoft.com/auditlogsearch",
+      "Create DLP policies": "https://compliance.microsoft.com/datalossprevention/policies",
+      "Enable sensitivity labels": "https://compliance.microsoft.com/informationprotection/labels",
+      "Enable auto-labeling policies": "https://compliance.microsoft.com/informationprotection/autolabeling",
+      "Turn on sensitivity labels for files in SharePoint and OneDrive": "https://compliance.microsoft.com/informationprotection/labels"
+    },
+    "Intune": {
+      "Require device compliance policies": "https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesComplianceMenu/~/policies",
+      "Turn on Microsoft Intune": "https://intune.microsoft.com/#home",
+      "Require encryption on devices": "https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesComplianceMenu/~/policies",
+      "Enable mobile device management": "https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesEnrollmentMenu/~/overview"
+    }
+  },
+  "fallbackRules": {
+    "exchange": {
+      "keywords": ["Exchange"],
+      "url": "https://admin.exchange.microsoft.com/"
+    },
+    "sharepoint": {
+      "keywords": ["SharePoint", "OneDrive"],
+      "url": "https://admin.microsoft.com/sharepoint"
+    },
+    "teams": {
+      "keywords": ["Teams"],
+      "url": "https://admin.teams.microsoft.com/"
+    },
+    "entra": {
+      "keywords": ["Conditional Access", "MFA", "Identity Protection", "Azure AD", "Entra", "password", "authentication"],
+      "url": "https://entra.microsoft.com/"
+    },
+    "defender": {
+      "keywords": ["Defender", "malware", "virus", "threat", "phish", "safe"],
+      "url": "https://security.microsoft.com/"
+    },
+    "compliance": {
+      "keywords": ["Compliance", "DLP", "audit", "label", "retention"],
+      "url": "https://compliance.microsoft.com/"
+    },
+    "intune": {
+      "keywords": ["Intune", "device", "mobile"],
+      "url": "https://intune.microsoft.com/"
+    },
+    "admin": {
+      "keywords": ["admin", "user", "role", "account"],
+      "url": "https://admin.microsoft.com/#/users"
+    }
+  },
+  "urlReplacements": {
+    "https://portal.office.com": "https://admin.microsoft.com",
+    "https://aad.portal.azure.com": "https://entra.microsoft.com",
+    "https://portal.azure.com/#blade/Microsoft_AAD_IAM": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM",
+    "https://portal.azure.com/#view/Microsoft_AAD": "https://entra.microsoft.com/#view/Microsoft_AAD"
+  }
+}
