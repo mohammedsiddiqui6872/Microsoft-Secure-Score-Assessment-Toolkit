@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-Assessment-Toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.0.0'
+ModuleVersion = '2.0.1'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -125,6 +125,10 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+v2.0.1 PowerShell Gallery Package Fix
+
+Ensures modern template is included in PowerShell Gallery package.
+
 v2.0.0 Major Architecture Refactoring and Modern UI
 
 BREAKING CHANGES
