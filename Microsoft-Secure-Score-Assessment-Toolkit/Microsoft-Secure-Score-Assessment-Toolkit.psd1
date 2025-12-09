@@ -93,9 +93,17 @@ AliasesToExport = @()
 # List of all files packaged with this module
 FileList = @(
     'Microsoft-Secure-Score-Assessment-Toolkit.psm1',
-    'SecureScore-Assessment-API.ps1',
+    'Microsoft-Secure-Score-Assessment-Toolkit.psd1',
     'README.md',
-    'CHANGELOG.md'
+    'CHANGELOG.md',
+    'Core/GraphApiClient.ps1',
+    'Core/Logger.ps1',
+    'Core/Models.ps1',
+    'Processors/ComplianceProcessor.ps1',
+    'Processors/UrlProcessor.ps1',
+    'Reports/HtmlReportGenerator.ps1',
+    'Config/control-mappings.json',
+    'Templates/report-modern-template.html'
 )
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
@@ -117,275 +125,32 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
-## v1.4.0 - Major Rebrand & Professional Header Design
-
-### Major Changes
-- **Renamed to Microsoft Secure Score Assessment Toolkit**: Better reflects the tool's read-only assessment functionality
-- **Professional Header Design**: Implemented CIS-style header with sticky positioning and expandable tenant details
-- **Enhanced User Experience**: Added dropdown with comprehensive report metadata
-
-### Header Improvements
-- **Sticky Header**: Fixed header that stays visible while scrolling
-- **Expandable Tenant Info**: Click to reveal detailed report information
-- **Clean Layout**: Professional dark theme matching enterprise standards
-- **Animated Dropdown**: Smooth transitions for detail expansion
-- **Comprehensive Metadata**: Shows tenant ID, user, score, compliance rate, and more
-
-### Technical Updates
-- Module renamed to Microsoft-Secure-Score-Assessment-Toolkit
-- All file references updated from "remediation" to "assessment"
-- Header CSS completely redesigned with #18181b background
-- Added JavaScript for interactive dropdown functionality
-- Removed redundant score summary section (info now in header)
-
-## v1.3.1 - Complete Entra Portal Migration & Enhanced URL Mappings
-
-### Major Enhancements
-- **Complete Azure AD to Entra Portal Migration**: All Azure AD portal URLs now use entra.microsoft.com
-- **Enhanced Control Mappings**: Added 15+ additional control-specific URL mappings
-- **Zero Old Portal Links**: Eliminated all aad.portal.azure.com references
-
-### New Control Mappings Added
-**Identity & Access Management**
-- Admin consent workflow → Entra ID Consent Settings
-- Microsoft 365 Groups creation restrictions → M365 Admin Groups Settings
-
-**Microsoft Defender & Security**
-- SPF, DKIM, DMARC configuration → Security portal DNS/email auth pages
-- Defender for Cloud Apps → Security portal cloud apps settings
-- App connectors → Security portal app governance
-
-**Exchange Online**
-- Mail flow rules → Exchange Admin transport rules
-- Transport rule whitelisting → Exchange Admin policies
-
-**SharePoint & OneDrive**
-- External domain restrictions → SharePoint Admin sharing settings
-
-**Compliance & Data Protection**
-- Office 365 Management Activity API → Compliance portal audit search
-- Sensitivity labels for SharePoint/OneDrive → Compliance portal labels
-
-### URL Quality Improvements
-- All Entra ID controls use new entra.microsoft.com portal
-- Verified 60+ control-to-portal mappings for accuracy
-- Documentation links only remain where no portal equivalent exists
-- Enhanced tenant context injection for all Microsoft portals
-
-### Verification Results
-- 0 old Azure AD portal URLs (aad.portal.azure.com)
-- 9+ unique Entra ID control mappings
-- 6 intentional documentation links (for DNS configs, on-prem settings, API references)
-- 328 unique portal URLs across 411 controls
-
-## v1.3.0 - Comprehensive Configuration URL Mappings
-
-### Major Enhancement
-- Added 40+ specific control-to-URL mappings for accurate configuration links
-- Configuration buttons now point to exact settings pages instead of documentation
-- Fixes critical issue where controls pointed to learn.microsoft.com instead of portals
-
-### Control Categories Mapped
-**Identity & Access Management (16 controls)**
-- Administrative accounts → M365 Admin Users with admin filter
-- MFA/Conditional Access → Entra ID CA policies
-- Global admin management → Entra ID Roles
-- Password policies → Entra ID authentication settings
-- Identity Protection → Entra ID Identity Protection
-
-**Microsoft Defender (8 controls)**
-- Defender for Office 365, Endpoint configuration
-- Safe Attachments, Safe Links, Anti-phishing
-- Anti-malware policies
-
-**Exchange Online (4 controls)**
-- Modern authentication, Mailbox auditing
-- Spam and malware policies
-
-**SharePoint & OneDrive (4 controls)**
-- Modern authentication, B2B integration
-- Versioning, Access controls
-
-**Microsoft Teams (2 controls)**
-- Meeting policies, Safe Links
-
-**Compliance (4 controls)**
-- Purview Audit, DLP, Sensitivity labels
-
-**Intune (3 controls)**
-- Compliance policies, Device encryption
-
-### Intelligent Fallback
-- Detects documentation links (learn.microsoft.com)
-- Routes to appropriate portal based on control keywords
-- Ensures configuration pages over documentation
-
-### Example Fix
-**Before:** "Ensure Administrative accounts are separate and cloud-only"
-→ https://learn.microsoft.com/.../add-users (Documentation)
-
-**After:** "Ensure Administrative accounts are separate and cloud-only"
-→ https://admin.microsoft.com/#/users?isAdmin=true (Actual Config Page)
-
-## v1.2.5 - ActionUrl Optimization
-
-### Enhancement
-- Added Optimize-ActionUrl function to ensure Configuration buttons link to correct settings pages
-- Automatically corrects outdated portal URLs (portal.office.com, old blade-style URLs)
-- Updates Entra ID URLs to use aad.portal.azure.com
-- Fixes Conditional Access and MFA URLs to point directly to policy pages
-- Enhanced tenant context injection for all Azure portal URLs
-- Ensures users always land in the correct tenant when clicking Configuration buttons
-
-### URL Transformations
-- portal.office.com → admin.microsoft.com
-- Old blade URLs → New view URLs for Entra ID
-- Standardized Conditional Access URLs
-- Improved Microsoft 365 Defender URL handling
-
-## v1.2.4 - Button Layout Fix
-
-### Bug Fix
-- Fixed overlapping Configuration and Documentation buttons in expanded control details
-- Added proper CSS class separation between floating action buttons and control detail buttons
-- Added flex-wrap to action-buttons container to prevent button overlap
-- Improved button layout for better user experience
-
-## v1.2.3 - Report Header Update
-
-### Enhancement
-- Updated HTML report header to "Microsoft SECURE SCORE ASSESSMENT"
-- Removed API-DRIVEN badge for cleaner, more professional appearance
-
-## v1.2.2 - Complete Syntax Fix
-
-### Bug Fix
-- Removed parentheses and special characters causing PowerShell parsing errors
-- Module now imports and loads correctly without any errors
-- All three functions available: Connect-MicrosoftSecureScore, Invoke-MicrosoftSecureScore, Get-MicrosoftSecureScoreInfo
-
-## v1.2.1 - Syntax Fix
-
-### Bug Fix
-- Fixed PowerShell parsing error with "+" character in Write-Host strings
-- Module now imports correctly without errors
-
-## v1.2.0 - PowerShell Gallery Release with Module Functions
-
-### Major Enhancement - Proper PowerShell Module Structure
-
-**NEW: PowerShell Module with Cmdlet-Style Functions**
-
-We've transformed the toolkit into a proper PowerShell module following Microsoft best practices, making it installable from PowerShell Gallery.
-
-### New Features
-
-- **Connect-MicrosoftSecureScore**: Dedicated authentication function
-  - Interactive browser authentication
-  - Device code authentication option (-UseDeviceCode)
-  - Automatic tenant and user context capture
-  - Clear authentication status feedback
-
-- **Invoke-MicrosoftSecureScore**: Generate assessment reports
-  - Fetch all 411+ controls from Microsoft Graph API
-  - Interactive HTML reports with filtering
-  - Applicable-only mode (-ApplicableOnly)
-  - Custom tenant names
-  - Automatic report timestamping
-
-- **Get-MicrosoftSecureScoreInfo**: Display toolkit information
-  - Version details
-  - Quick start guide
-  - Usage examples
-  - Helpful links
-
-### Installation from PowerShell Gallery
-
-```powershell
-# Install the module
-Install-Module -Name Microsoft-Secure-Score-Assessment-Toolkit -Scope CurrentUser
-
-# Authenticate
-Connect-MicrosoftSecureScore
-
-# Generate report
-Invoke-MicrosoftSecureScore
-```
-
-### Usage Examples
-
-```powershell
-# Full report with all 411+ controls
-Connect-MicrosoftSecureScore
-Invoke-MicrosoftSecureScore
-
-# Only applicable controls
-Invoke-MicrosoftSecureScore -ApplicableOnly
-
-# Custom organization name
-Invoke-MicrosoftSecureScore -TenantName "Contoso Corporation"
-
-# Device code authentication
-Connect-MicrosoftSecureScore -UseDeviceCode
-Invoke-MicrosoftSecureScore
-
-# Get toolkit info
-Get-MicrosoftSecureScoreInfo
-```
-
-### Enhanced HTML Reports
-
-- **Floating Action Buttons**: Chatbot-style buttons on right side
-  - View on GitHub
-  - Report Issues
-  - Submit Feedback
-  - Let's Chat! (LinkedIn)
-  - Buy Me a Coffee
-- **Professional SVG Icons**: Cross-browser compatible vector icons
-- **Interactive Tooltips**: Hover for descriptions
-- **Compact Footer**: Single-line footer with essential info
-- **Tenant Context**: Shows tenant ID and authenticated user
-
-### Benefits
-
-- **PowerShell Gallery Distribution**: One-command installation
-- **Module Auto-Loading**: Import automatically when using functions
-- **Consistent UX**: Follows PowerShell naming conventions
-- **Better Error Handling**: Clear error messages and troubleshooting
-- **Automatic Updates**: Update-Module support
-
-### Technical Details
-
-- Module follows PowerShell best practices
-- Functions use approved verbs (Connect, Invoke, Get)
-- Comprehensive comment-based help
-- Proper parameter validation
-- ContextScope Process for session management
-
-### Breaking Changes
-
-**OLD WORKFLOW (Still works for direct script execution):**
-```powershell
-.\SecureScore-Remediation-API.ps1 -WhatIf
-```
-
-**NEW RECOMMENDED WORKFLOW (Module functions):**
-```powershell
-Connect-MicrosoftSecureScore
-Invoke-MicrosoftSecureScore
-```
-
-## v1.1.0 - Enhanced HTML Reports with Floating Action Buttons
-
-### Features
-- Interactive filtering via clickable summary cards
-- 6-card single-row dashboard layout
-- Real-time progress indicators
-- Tenant attribution in reports
-- GitHub repository links in footer
-- Professional hover effects on summary cards
-
-See CHANGELOG.md for complete version history.
+v2.0.0 Major Architecture Refactoring and Modern UI
+
+BREAKING CHANGES
+Complete code refactoring with modular architecture
+Enhanced modern dashboard UI with gradient design and animations
+
+NEW FEATURES
+Modular Architecture: Separated into Core, Processors, Reports, Templates, and Config directories
+File based Logging: New LogPath parameter for audit trails
+Template System: Maintainable HTML CSS JS files
+Config Management: URL mappings in JSON with 60+ mappings
+Modern UI: Circular score visualization, filter buttons, search functionality, animations
+HTML Processing: Converts API HTML to readable text with proper formatting
+
+IMPROVEMENTS
+GraphApiClient, ComplianceProcessor, UrlProcessor, HtmlReportGenerator, Logger modules
+Error handling with try catch blocks throughout
+Session state management for module reloads
+Comprehensive HTML entity decoding
+
+FIXED
+HTML tags displaying in descriptions
+Module reload preserves Graph connection context
+Empty string handling with fallback messages
+
+Full changelog at https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/blob/main/CHANGELOG.md
 '@
 
         # Prerelease string of this module
