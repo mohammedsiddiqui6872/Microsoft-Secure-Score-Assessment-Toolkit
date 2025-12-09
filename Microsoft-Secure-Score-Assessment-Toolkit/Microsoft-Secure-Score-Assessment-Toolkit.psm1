@@ -454,8 +454,8 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host "  • Security Reader or Global Reader role" -ForegroundColor White
 
     Write-Host "`nLINKS:" -ForegroundColor Yellow
-    Write-Host "  GitHub: https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit" -ForegroundColor Cyan
-    Write-Host "  Issues: https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues" -ForegroundColor Cyan
+    Write-Host "  GitHub: https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit" -ForegroundColor Cyan
+    Write-Host "  Issues: https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues" -ForegroundColor Cyan
 
     Write-Host "`nSUPPORT:" -ForegroundColor Yellow
     Write-Host "  Buy Me a Coffee: https://buymeacoffee.com/mohammedsiddiqui" -ForegroundColor Magenta

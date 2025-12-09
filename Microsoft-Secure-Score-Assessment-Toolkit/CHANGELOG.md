@@ -52,7 +52,7 @@ All notable changes to this project will be documented in this file.
   - Displays current control number and percentage complete
   - Improves user experience during 411 control processing
 - **Git Repository**: Project now under version control
-  - Repository: https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit.git
+  - Repository: https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit.git
   - Proper .gitignore to exclude logs, reports, and temporary files
 
 ### Changed
@@ -75,3 +75,4 @@ All notable changes to this project will be documented in this file.
 - Professional dark-themed report interface
 - Direct action links to configuration portals
 - Executive summary with compliance metrics
+

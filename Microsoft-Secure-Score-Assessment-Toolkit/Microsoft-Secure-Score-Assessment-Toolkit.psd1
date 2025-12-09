@@ -115,13 +115,13 @@ PrivateData = @{
         Tags = @('Microsoft365', 'M365', 'SecureScore', 'Security', 'Compliance', 'Audit', 'Assessment', 'Graph', 'GraphAPI', 'SecurityCompliance', 'SecurityAssessment', 'SecurityPosture', 'CyberSecurity', 'GRC', 'RiskManagement', 'SecurityControls', 'EntraID', 'AzureAD', 'Defender', 'Purview', 'Intune')
 
         # A URL to the license for this module.
-        LicenseUri = 'https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/blob/main/LICENSE'
+        LicenseUri = 'https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/blob/main/LICENSE'
 
         # A URL to the main website for this project.
-        ProjectUri = 'https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit'
+        ProjectUri = 'https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit'
 
         # A URL to an icon representing this module.
-        IconUri = 'https://raw.githubusercontent.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/main/.github/icon.png'
+        IconUri = 'https://raw.githubusercontent.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/main/.github/icon.png'
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
@@ -154,7 +154,7 @@ HTML tags displaying in descriptions
 Module reload preserves Graph connection context
 Empty string handling with fallback messages
 
-Full changelog at https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/blob/main/CHANGELOG.md
+Full changelog at https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/blob/main/CHANGELOG.md
 '@
 
         # Prerelease string of this module
@@ -171,7 +171,7 @@ Full changelog at https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score
 } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
-HelpInfoURI = 'https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/blob/main/README.md'
+HelpInfoURI = 'https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/blob/main/README.md'
 
 # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
 # DefaultCommandPrefix = ''

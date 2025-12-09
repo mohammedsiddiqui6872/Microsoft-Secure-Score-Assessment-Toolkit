@@ -412,11 +412,11 @@ We welcome contributions! Here's how you can help:
 
 ### Report Issues
 Found a bug or have a feature request?
-[Open an issue](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues)
+[Open an issue](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues)
 
 ### Submit Feedback
 Have suggestions for improvements?
-[Share your feedback](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new)
+[Share your feedback](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues/new)
 
 ### Support This Project
 If this toolkit has helped improve your security posture:
@@ -458,9 +458,9 @@ This toolkit is not affiliated with or endorsed by Microsoft Corporation. Micros
 ## 🔗 Links
 
 - 📦 [PowerShell Gallery](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-Assessment-Toolkit)
-- 🐙 [GitHub Repository](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit)
-- 🐛 [Report Issues](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues)
-- 💬 [Submit Feedback](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-remediation-toolkit/issues/new)
+- 🐙 [GitHub Repository](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit)
+- 🐛 [Report Issues](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues)
+- 💬 [Submit Feedback](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues/new)
 - 👔 [LinkedIn](https://www.linkedin.com/in/mohammedsiddiqui6872/)
 - ☕ [Buy Me a Coffee](https://buymeacoffee.com/mohammedsiddiqui)
 
