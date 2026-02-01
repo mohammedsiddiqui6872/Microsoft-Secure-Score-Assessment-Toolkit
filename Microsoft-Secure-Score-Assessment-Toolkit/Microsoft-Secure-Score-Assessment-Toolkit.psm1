@@ -142,6 +142,10 @@ function Invoke-MicrosoftSecureScore {
     .PARAMETER InlineAssets
         Inline CSS and JavaScript into the HTML file (creates single-file report).
 
+    .PARAMETER ExcludeCategories
+        Array of category names to exclude from the report.
+        Valid categories: Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, Intune.
+
     .EXAMPLE
         Invoke-MicrosoftSecureScore
         Generates a full report with all 411+ controls.
@@ -157,6 +161,10 @@ function Invoke-MicrosoftSecureScore {
     .EXAMPLE
         Invoke-MicrosoftSecureScore -ReportPath "C:\Reports\SecureScore.html" -LogPath "C:\Logs\SecureScore.log"
         Generates a report and log at specified locations.
+
+    .EXAMPLE
+        Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint")
+        Generates a report excluding Exchange and SharePoint controls.
 
     .NOTES
         You must run Connect-MicrosoftSecureScore before using this function.
@@ -176,7 +184,11 @@ function Invoke-MicrosoftSecureScore {
         [string]$LogPath,
 
         [Parameter(Mandatory = $false)]
-        [switch]$InlineAssets
+        [switch]$InlineAssets,
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet("Identity", "Defender", "Exchange", "SharePoint", "Groups", "Teams", "Compliance", "Intune")]
+        [string[]]$ExcludeCategories
     )
 
     try {
@@ -217,6 +229,9 @@ function Invoke-MicrosoftSecureScore {
         Write-Log "Report Path: $ReportPath" -Level Info
         if ($LogPath) {
             Write-Log "Log Path: $LogPath" -Level Info
+        }
+        if ($ExcludeCategories -and $ExcludeCategories.Count -gt 0) {
+            Write-Log "Excluded Categories: $($ExcludeCategories -join ', ')" -Level Info
         }
 
         # Initialize URL processor with config
@@ -282,6 +297,7 @@ function Invoke-MicrosoftSecureScore {
         # Process each control
         $processedCount = 0
         $skippedCount = 0
+        $excludedCount = 0
 
         foreach ($control in $controls) {
             $processedCount++
@@ -291,6 +307,15 @@ function Invoke-MicrosoftSecureScore {
                 -Current $processedCount `
                 -Total $controls.Count `
                 -FileLogInterval 50
+
+            # Check if category should be excluded
+            if ($ExcludeCategories -and $ExcludeCategories.Count -gt 0) {
+                if ($control.ControlCategory -in $ExcludeCategories) {
+                    $excludedCount++
+                    Write-Log "Excluded control from category '$($control.ControlCategory)': $($control.Title)" -Level Info -NoConsole
+                    continue
+                }
+            }
 
             # Validate control data
             if (-not (Test-ControlDataValid -Control $control)) {
@@ -357,6 +382,9 @@ function Invoke-MicrosoftSecureScore {
 
         Write-Log -Level Info
         Write-Log "Processed $($controls.Count) controls" -Level Success
+        if ($excludedCount -gt 0) {
+            Write-Log "Excluded $excludedCount controls based on category filter" -Level Info
+        }
         if ($skippedCount -gt 0) {
             Write-Log "Skipped $skippedCount invalid controls" -Level Warning
         }
@@ -413,7 +441,7 @@ function Get-MicrosoftSecureScoreInfo {
     [CmdletBinding()]
     param()
 
-    $version = "2.0.0"
+    $version = "2.1.0"
 
     Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
     Write-Host "║   Microsoft Secure Score Assessment Toolkit v$version         ║" -ForegroundColor Cyan

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - 2026-02-01
+
+### Added
+- **ExcludeCategories Parameter**: New parameter to exclude specific categories from reports
+  - Allows filtering out unwanted control categories (Exchange, SharePoint, Teams, etc.)
+  - Supports multiple categories: `-ExcludeCategories @("Exchange", "SharePoint")`
+  - ValidateSet ensures only valid category names are accepted
+  - Categories: Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, Intune
+  - Enhanced logging shows excluded categories and count of filtered controls
+  - Example: `Invoke-MicrosoftSecureScore -ExcludeCategories "Exchange"` skips all Exchange controls
+
+### Improved
+- Better visibility into report filtering with category exclusion counts
+- Log output now displays excluded categories at assessment start
+- Summary includes count of controls excluded by category filter
+
 ## [1.4.0] - 2025-11-18
 
 ### Changed

@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-Assessment-Toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.0.2'
+ModuleVersion = '2.1.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -125,6 +125,21 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+v2.1.0 Category Filtering Feature
+
+NEW FEATURES
+ExcludeCategories Parameter: Filter out unwanted control categories from reports
+  - Skip specific categories like Exchange, SharePoint, Teams, etc.
+  - Supports multiple categories: -ExcludeCategories @("Exchange", "SharePoint")
+  - ValidateSet with tab-completion for valid categories
+  - Enhanced logging shows excluded categories and filtered control counts
+  - Valid categories: Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, Intune
+
+IMPROVEMENTS
+Better report filtering visibility with category exclusion counts
+Log output displays excluded categories at assessment start
+Summary includes total controls excluded by category filter
+
 v2.0.2 Repository URL Updates
 
 Updated all URLs to match renamed GitHub repository Microsoft Secure Score Assessment Toolkit.
