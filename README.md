@@ -33,6 +33,7 @@ A powerful PowerShell module for assessing and managing Microsoft 365 security p
 - **Floating Action Buttons**: Chatbot-style buttons for quick access to documentation and support
 
 ### 🎯 Smart Features
+- **Category Filtering**: Exclude specific control categories from reports (Exchange, SharePoint, Teams, etc.)
 - **Tenant Attribution**: Shows tenant ID and user who generated the report
 - **Category Organization**: Controls grouped by security domains (Identity, Data, Device, Apps, Infrastructure)
 - **Risk-Based Prioritization**: Controls categorized as High, Medium, or Low risk
@@ -125,12 +126,16 @@ Invoke-MicrosoftSecureScore
     [-TenantName <String>]
     [-ApplicableOnly]
     [-ReportPath <String>]
+    [-LogPath <String>]
+    [-ExcludeCategories <String[]>]
 ```
 
 **Parameters:**
 - `-TenantName`: Display name for your organization in the report (default: "Your Organization")
 - `-ApplicableOnly`: Show only controls applicable to your tenant (~70 controls instead of 411+)
 - `-ReportPath`: Custom path for the HTML report (default: current directory with timestamp)
+- `-LogPath`: Path where the log file will be saved (optional)
+- `-ExcludeCategories`: Array of category names to exclude from the report. Valid categories: Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, Intune
 
 **Examples:**
 ```powershell
@@ -146,8 +151,17 @@ Invoke-MicrosoftSecureScore -TenantName "Contoso Corporation"
 # Custom report path
 Invoke-MicrosoftSecureScore -ReportPath "C:\Reports\SecureScore.html"
 
-# Combine parameters
-Invoke-MicrosoftSecureScore -TenantName "Contoso" -ApplicableOnly -ReportPath "C:\Reports\Contoso-SecureScore.html"
+# Exclude Exchange controls from report
+Invoke-MicrosoftSecureScore -ExcludeCategories "Exchange"
+
+# Exclude multiple categories
+Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint", "Teams")
+
+# Combine parameters with category filtering
+Invoke-MicrosoftSecureScore -TenantName "Contoso" -ApplicableOnly -ExcludeCategories @("Exchange") -ReportPath "C:\Reports\Contoso-SecureScore.html"
+
+# Enable logging with category exclusion
+Invoke-MicrosoftSecureScore -ExcludeCategories @("SharePoint", "Teams") -LogPath "C:\Logs\assessment.log"
 ```
 
 ---
@@ -200,7 +214,21 @@ Connect-MicrosoftSecureScore
 Invoke-MicrosoftSecureScore -TenantName "Fabrikam Inc" -ReportPath "C:\Reports\Fabrikam.html"
 ```
 
-### Scenario 4: Scheduled Reporting
+### Scenario 4: Category Filtering
+
+```powershell
+# Focus only on Identity and Defender controls, excluding other categories
+Connect-MicrosoftSecureScore
+Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint", "Teams", "Groups", "Compliance", "Intune")
+
+# Skip Exchange and SharePoint for cloud-only environments
+Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint")
+
+# Generate report excluding categories you don't manage
+Invoke-MicrosoftSecureScore -TenantName "Contoso" -ExcludeCategories @("Intune", "Teams") -ApplicableOnly
+```
+
+### Scenario 5: Scheduled Reporting
 
 ```powershell
 # Create a scheduled task to run daily
@@ -338,6 +366,15 @@ Invoke-MicrosoftSecureScore
 ---
 
 ## 📝 Changelog
+
+### [2.1.0] - 2026-02-01
+**Category Filtering Feature:**
+- **ExcludeCategories Parameter**: New parameter to exclude specific control categories from reports
+- **Category Options**: Filter out Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, or Intune controls
+- **Multiple Category Support**: Exclude multiple categories using array syntax: `-ExcludeCategories @("Exchange", "SharePoint")`
+- **ValidateSet Tab-Completion**: Valid category names enforced with PowerShell tab-completion
+- **Enhanced Logging**: Shows excluded categories and count of filtered controls in log output
+- **Use Cases**: Focus on relevant controls, skip categories you don't manage, streamline reports for specific audiences
 
 ### [1.3.1] - 2025-11-14
 **Complete Entra Portal Migration & Enhanced URL Mappings:**
