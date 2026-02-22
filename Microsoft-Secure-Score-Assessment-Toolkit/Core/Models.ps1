@@ -299,7 +299,18 @@ function ConvertTo-HtmlEncoded {
     $encoded = $encoded -replace '"', '&quot;'
     $encoded = $encoded -replace "'", '&#39;'
 
-    return $encoded
+    # Convert non-ASCII characters to HTML numeric entities to avoid
+    # encoding issues (e.g. bullet • showing as garbled characters)
+    $sb = [System.Text.StringBuilder]::new($encoded.Length * 2)
+    foreach ($c in $encoded.ToCharArray()) {
+        if ([int]$c -gt 127) {
+            [void]$sb.Append("&#$([int]$c);")
+        } else {
+            [void]$sb.Append($c)
+        }
+    }
+
+    return $sb.ToString()
 }
 
 # Functions are exported via the main module manifest (.psd1)
