@@ -13,7 +13,7 @@ function New-ReportData {
     param()
 
     return @{
-        ProposedChanges = @()
+        ProposedChanges = [System.Collections.Generic.List[hashtable]]::new()
         ExecutiveSummary = @{
             TotalChecks = 0
             Compliant = 0
@@ -126,7 +126,7 @@ function Add-ReportItem {
         ActionUrl = $ActionUrl
     }
 
-    $ReportData.ProposedChanges += $item
+    $ReportData.ProposedChanges.Add($item)
     $ReportData.ExecutiveSummary.TotalChecks++
 
     switch ($Status) {
@@ -199,8 +199,8 @@ function Update-ReportMetadata {
     if ($TenantName) { $ReportData.Metadata.TenantName = $TenantName }
     if ($GeneratedBy) { $ReportData.Metadata.GeneratedBy = $GeneratedBy }
     if ($GeneratedDate) { $ReportData.Metadata.GeneratedDate = $GeneratedDate }
-    if ($CurrentScore) { $ReportData.ExecutiveSummary.CurrentScore = $CurrentScore }
-    if ($MaxScore) { $ReportData.ExecutiveSummary.MaxScore = $MaxScore }
+    if ($PSBoundParameters.ContainsKey('CurrentScore')) { $ReportData.ExecutiveSummary.CurrentScore = $CurrentScore }
+    if ($PSBoundParameters.ContainsKey('MaxScore')) { $ReportData.ExecutiveSummary.MaxScore = $MaxScore }
 }
 
 function ConvertFrom-HtmlString {
@@ -302,10 +302,4 @@ function ConvertTo-HtmlEncoded {
     return $encoded
 }
 
-Export-ModuleMember -Function @(
-    'New-ReportData',
-    'Add-ReportItem',
-    'Update-ReportMetadata',
-    'ConvertFrom-HtmlString',
-    'ConvertTo-HtmlEncoded'
-)
+# Functions are exported via the main module manifest (.psd1)

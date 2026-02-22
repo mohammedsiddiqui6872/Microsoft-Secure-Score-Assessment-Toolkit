@@ -59,10 +59,10 @@ function Get-ControlMapping {
         return $null
     }
 
-    # Search through all category mappings
+    # Search through all category mappings using exact match
     foreach ($category in $script:ControlMappingsCache.controlMappings.PSObject.Properties) {
         foreach ($mapping in $category.Value.PSObject.Properties) {
-            if ($ControlName -match [regex]::Escape($mapping.Name)) {
+            if ($ControlName -eq $mapping.Name) {
                 Write-Verbose "Found exact mapping for '$ControlName': $($mapping.Value)"
                 return $mapping.Value
             }
@@ -285,12 +285,4 @@ function Test-UrlProcessorInitialized {
     return ($null -ne $script:ControlMappingsCache)
 }
 
-Export-ModuleMember -Function @(
-    'Initialize-UrlProcessor',
-    'Get-ControlMapping',
-    'Get-FallbackUrl',
-    'Update-LegacyPortalUrl',
-    'Add-TenantContext',
-    'Optimize-ControlUrl',
-    'Test-UrlProcessorInitialized'
-)
+# Functions are exported via the main module manifest (.psd1)

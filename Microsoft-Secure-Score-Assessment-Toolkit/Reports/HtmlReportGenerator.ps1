@@ -50,6 +50,20 @@ function New-HtmlReport {
         # Load template content
         $htmlContent = Get-Content -Path $templateFile -Raw -Encoding UTF8
 
+        # Load and embed logo as base64
+        $logoPath = Join-Path (Split-Path $TemplatePath -Parent) "powershellnerdlogo.png"
+        if (Test-Path $logoPath) {
+            $logoBytes = [System.IO.File]::ReadAllBytes($logoPath)
+            $logoBase64 = [System.Convert]::ToBase64String($logoBytes)
+            $htmlContent = $htmlContent.Replace('{{LOGO_BASE64}}', $logoBase64)
+            Write-Verbose "Embedded logo from $logoPath"
+        }
+        else {
+            # Fallback: remove logo placeholders with a transparent 1x1 pixel
+            $htmlContent = $htmlContent.Replace('{{LOGO_BASE64}}', 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')
+            Write-Verbose "Logo file not found at $logoPath, using fallback"
+        }
+
         # Build control cards HTML
         $controlCards = Build-ControlCards -ReportData $ReportData
         Write-Verbose "Generated $($ReportData.ProposedChanges.Count) control cards, HTML length: $($controlCards.Length) characters"
@@ -230,11 +244,11 @@ function Build-ModernControlCard {
     if ($Item.ActionUrl) {
         $actionButtonsHtml = @"
                             <a href="$encodedActionUrl" target="_blank" class="action-btn action-btn-primary">
-                                <span>⚙️</span>
+                                <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></span>
                                 <span>Configure Setting</span>
                             </a>
                             <a href="$encodedReference" target="_blank" class="action-btn action-btn-secondary">
-                                <span>📚</span>
+                                <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></span>
                                 <span>View Documentation</span>
                             </a>
 "@
@@ -242,7 +256,7 @@ function Build-ModernControlCard {
     elseif ($Item.Reference) {
         $actionButtonsHtml = @"
                             <a href="$encodedReference" target="_blank" class="action-btn action-btn-secondary">
-                                <span>📚</span>
+                                <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></span>
                                 <span>View Documentation</span>
                             </a>
 "@
@@ -291,8 +305,4 @@ $actionButtonsHtml
 "@
 }
 
-Export-ModuleMember -Function @(
-    'New-HtmlReport',
-    'Build-ControlCards',
-    'Build-ModernControlCard'
-)
+# Functions are exported via the main module manifest (.psd1)

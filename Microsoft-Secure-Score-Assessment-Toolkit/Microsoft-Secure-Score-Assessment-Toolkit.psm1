@@ -22,7 +22,7 @@ $ReportModules = @(
     'Reports\HtmlReportGenerator.ps1'
 )
 
-# Import all modules
+# Import all modules - fail fast if any are missing
 $AllModules = $CoreModules + $ProcessorModules + $ReportModules
 foreach ($module in $AllModules) {
     $modulePath = Join-Path $script:ModuleRoot $module
@@ -30,7 +30,7 @@ foreach ($module in $AllModules) {
         . $modulePath
     }
     else {
-        Write-Warning "Module file not found: $modulePath"
+        throw "Required module file not found: $modulePath. Please reinstall the module."
     }
 }
 
@@ -117,6 +117,32 @@ function Connect-MicrosoftSecureScore {
     }
 }
 
+function Disconnect-MicrosoftSecureScore {
+    <#
+    .SYNOPSIS
+        Disconnect from Microsoft Graph and clean up session.
+
+    .DESCRIPTION
+        Disconnects the current Microsoft Graph session and clears the module's connection context.
+
+    .EXAMPLE
+        Disconnect-MicrosoftSecureScore
+        Disconnects from Microsoft Graph.
+    #>
+    [CmdletBinding()]
+    param()
+
+    try {
+        Disconnect-MgGraph -ErrorAction SilentlyContinue | Out-Null
+        $script:CurrentContext = $null
+        Write-Host "Disconnected from Microsoft Graph successfully." -ForegroundColor Green
+    }
+    catch {
+        Write-Warning "Error during disconnect: $_"
+        $script:CurrentContext = $null
+    }
+}
+
 function Invoke-MicrosoftSecureScore {
     <#
     .SYNOPSIS
@@ -139,8 +165,11 @@ function Invoke-MicrosoftSecureScore {
     .PARAMETER LogPath
         Path where the log file will be saved. If not specified, logging to file is disabled.
 
-    .PARAMETER InlineAssets
-        Inline CSS and JavaScript into the HTML file (creates single-file report).
+    .PARAMETER CsvPath
+        Path where the CSV export will be saved. If not specified, CSV export is skipped.
+
+    .PARAMETER NoOpen
+        Do not automatically open the report in the default browser after generation.
 
     .PARAMETER ExcludeCategories
         Array of category names to exclude from the report.
@@ -166,6 +195,14 @@ function Invoke-MicrosoftSecureScore {
         Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint")
         Generates a report excluding Exchange and SharePoint controls.
 
+    .EXAMPLE
+        Invoke-MicrosoftSecureScore -CsvPath "C:\Reports\SecureScore.csv"
+        Generates an HTML report and exports results to CSV.
+
+    .EXAMPLE
+        Invoke-MicrosoftSecureScore -NoOpen
+        Generates a report without opening it in the browser.
+
     .NOTES
         You must run Connect-MicrosoftSecureScore before using this function.
     #>
@@ -184,7 +221,10 @@ function Invoke-MicrosoftSecureScore {
         [string]$LogPath,
 
         [Parameter(Mandatory = $false)]
-        [switch]$InlineAssets,
+        [string]$CsvPath,
+
+        [Parameter(Mandatory = $false)]
+        [switch]$NoOpen,
 
         [Parameter(Mandatory = $false)]
         [ValidateSet("Identity", "Defender", "Exchange", "SharePoint", "Groups", "Teams", "Compliance", "Intune")]
@@ -192,6 +232,26 @@ function Invoke-MicrosoftSecureScore {
     )
 
     try {
+        # Validate output paths - ensure parent directories exist
+        if ($ReportPath) {
+            $reportDir = Split-Path -Path $ReportPath -Parent
+            if ($reportDir -and -not (Test-Path $reportDir)) {
+                throw "Report output directory does not exist: $reportDir"
+            }
+        }
+        if ($LogPath) {
+            $logDir = Split-Path -Path $LogPath -Parent
+            if ($logDir -and -not (Test-Path $logDir)) {
+                throw "Log output directory does not exist: $logDir"
+            }
+        }
+        if ($CsvPath) {
+            $csvDir = Split-Path -Path $CsvPath -Parent
+            if ($csvDir -and -not (Test-Path $csvDir)) {
+                throw "CSV output directory does not exist: $csvDir"
+            }
+        }
+
         # Restore context from Graph if we lost it (e.g., module reload)
         if (-not $script:CurrentContext) {
             $context = Get-MgContext
@@ -230,6 +290,9 @@ function Invoke-MicrosoftSecureScore {
         if ($LogPath) {
             Write-Log "Log Path: $LogPath" -Level Info
         }
+        if ($CsvPath) {
+            Write-Log "CSV Export Path: $CsvPath" -Level Info
+        }
         if ($ExcludeCategories -and $ExcludeCategories.Count -gt 0) {
             Write-Log "Excluded Categories: $($ExcludeCategories -join ', ')" -Level Info
         }
@@ -257,7 +320,9 @@ function Invoke-MicrosoftSecureScore {
         Write-LogSection -Title "Fetching Secure Score Data" -Level Info
         $scoreData = Get-SecureScoreData
         Write-Log "Current Score: $($scoreData.CurrentScore) / $($scoreData.MaxScore)" -Level Success
-        $scorePercentage = [math]::Round(($scoreData.CurrentScore / $scoreData.MaxScore) * 100, 1)
+        $scorePercentage = if ($scoreData.MaxScore -gt 0) {
+            [math]::Round(($scoreData.CurrentScore / $scoreData.MaxScore) * 100, 1)
+        } else { 0 }
         Write-Log "Percentage: $scorePercentage%" -Level Success
 
         # Fetch control profiles
@@ -295,20 +360,13 @@ function Invoke-MicrosoftSecureScore {
             -MaxScore $scoreData.MaxScore
 
         # Process each control
+        $totalControls = $controls.Count
         $processedCount = 0
         $skippedCount = 0
         $excludedCount = 0
 
         foreach ($control in $controls) {
-            $processedCount++
-
-            # Log progress
-            Write-LogProgress -Activity "Processing Secure Score Controls" `
-                -Current $processedCount `
-                -Total $controls.Count `
-                -FileLogInterval 50
-
-            # Check if category should be excluded
+            # Check if category should be excluded (before incrementing processed count)
             if ($ExcludeCategories -and $ExcludeCategories.Count -gt 0) {
                 if ($control.ControlCategory -in $ExcludeCategories) {
                     $excludedCount++
@@ -316,6 +374,14 @@ function Invoke-MicrosoftSecureScore {
                     continue
                 }
             }
+
+            $processedCount++
+
+            # Log progress (based on non-excluded controls)
+            Write-LogProgress -Activity "Processing Secure Score Controls" `
+                -Current $processedCount `
+                -Total ($totalControls - $excludedCount) `
+                -FileLogInterval 50
 
             # Validate control data
             if (-not (Test-ControlDataValid -Control $control)) {
@@ -381,7 +447,7 @@ function Invoke-MicrosoftSecureScore {
         Write-Progress -Activity "Processing Secure Score Controls" -Completed
 
         Write-Log -Level Info
-        Write-Log "Processed $($controls.Count) controls" -Level Success
+        Write-Log "Processed $processedCount controls" -Level Success
         if ($excludedCount -gt 0) {
             Write-Log "Excluded $excludedCount controls based on category filter" -Level Info
         }
@@ -390,15 +456,40 @@ function Invoke-MicrosoftSecureScore {
         }
         Write-Log "Collected $($reportData.ProposedChanges.Count) configuration items" -Level Success
 
+        # Export to CSV if requested
+        if ($CsvPath) {
+            Write-LogSection -Title "Exporting CSV Report" -Level Info
+            try {
+                $csvData = $reportData.ProposedChanges | ForEach-Object {
+                    [PSCustomObject]@{
+                        Category          = $_.Category
+                        SettingName       = $_.SettingName
+                        Status            = $_.Status
+                        Risk              = $_.Risk
+                        CurrentValue      = $_.CurrentValue
+                        ProposedValue     = $_.ProposedValue
+                        Justification     = $_.Justification
+                        SecureScoreImpact = $_.SecureScoreImpact
+                        ActionUrl         = $_.ActionUrl
+                    }
+                }
+                $csvData | Export-Csv -Path $CsvPath -NoTypeInformation -Encoding UTF8 -Force
+                Write-Log "CSV exported successfully: $CsvPath" -Level Success
+            }
+            catch {
+                Write-Log "Failed to export CSV: $_" -Level Error
+                Write-Warning "CSV export failed: $_"
+            }
+        }
+
         # Generate HTML report
         Write-LogSection -Title "Generating HTML Report" -Level Info
         $templatePath = Join-Path $script:ModuleRoot "Templates"
 
         $reportParams = @{
-            ReportData = $reportData
+            ReportData   = $reportData
             TemplatePath = $templatePath
-            OutputPath = $ReportPath
-            InlineAssets = $true  # Always inline for single-file portability
+            OutputPath   = $ReportPath
         }
 
         $generatedReport = New-HtmlReport @reportParams
@@ -408,15 +499,22 @@ function Invoke-MicrosoftSecureScore {
         # Close logger
         Close-Logger
 
-        # Open report in browser
-        Write-Host "`nOpening report in default browser..." -ForegroundColor Cyan
-        Start-Process $generatedReport
+        # Open report in browser unless suppressed
+        if (-not $NoOpen) {
+            Write-Host "`nOpening report in default browser..." -ForegroundColor Cyan
+            Start-Process $generatedReport
+        }
 
         Write-Host "`n=== Assessment Complete ===" -ForegroundColor Green
         Write-Host "Report: $generatedReport" -ForegroundColor Cyan
+        if ($CsvPath) {
+            Write-Host "CSV: $CsvPath" -ForegroundColor Cyan
+        }
         if ($LogPath) {
             Write-Host "Log: $LogPath" -ForegroundColor Cyan
         }
+
+        return $generatedReport
     }
     catch {
         Write-Error "Failed to generate secure score assessment: $_"
@@ -441,12 +539,23 @@ function Get-MicrosoftSecureScoreInfo {
     [CmdletBinding()]
     param()
 
-    $version = "2.1.0"
+    # Read version from module manifest
+    $manifestPath = Join-Path $script:ModuleRoot "Microsoft-Secure-Score-Assessment-Toolkit.psd1"
+    $version = "Unknown"
+    if (Test-Path $manifestPath) {
+        try {
+            $manifestData = Import-PowerShellDataFile -Path $manifestPath
+            $version = $manifestData.ModuleVersion
+        }
+        catch {
+            $version = "Unknown"
+        }
+    }
 
-    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║   Microsoft Secure Score Assessment Toolkit v$version         ║" -ForegroundColor Cyan
-    Write-Host "║   Refactored Architecture - Modular Design                   ║" -ForegroundColor Cyan
-    Write-Host "╚════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+    Write-Host "`n=====================================================================" -ForegroundColor Cyan
+    Write-Host "   Microsoft Secure Score Assessment Toolkit v$version" -ForegroundColor Cyan
+    Write-Host "   Modular Architecture - Enterprise Security Assessment" -ForegroundColor Cyan
+    Write-Host "=====================================================================" -ForegroundColor Cyan
 
     Write-Host "`nDESCRIPTION:" -ForegroundColor Yellow
     Write-Host "  Generate comprehensive security reports with over 400 Microsoft" -ForegroundColor White
@@ -458,6 +567,9 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host ""
     Write-Host "  2. Invoke-MicrosoftSecureScore" -ForegroundColor Green
     Write-Host "     Generate full assessment report with 411+ controls" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "  3. Disconnect-MicrosoftSecureScore" -ForegroundColor Green
+    Write-Host "     Clean up Microsoft Graph session" -ForegroundColor Gray
 
     Write-Host "`nCOMMON EXAMPLES:" -ForegroundColor Yellow
     Write-Host "  # Full report with all controls" -ForegroundColor Gray
@@ -466,20 +578,24 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host "  # Only applicable controls with logging" -ForegroundColor Gray
     Write-Host "  Invoke-MicrosoftSecureScore -ApplicableOnly -LogPath 'C:\Logs\assessment.log'" -ForegroundColor White
     Write-Host ""
-    Write-Host "  # Custom organization name with inline assets" -ForegroundColor Gray
-    Write-Host "  Invoke-MicrosoftSecureScore -TenantName 'Contoso Corp' -InlineAssets" -ForegroundColor White
+    Write-Host "  # Export to CSV for analysis" -ForegroundColor Gray
+    Write-Host "  Invoke-MicrosoftSecureScore -CsvPath 'C:\Reports\SecureScore.csv'" -ForegroundColor White
+    Write-Host ""
+    Write-Host "  # Exclude categories and suppress browser" -ForegroundColor Gray
+    Write-Host "  Invoke-MicrosoftSecureScore -ExcludeCategories @('Exchange','SharePoint') -NoOpen" -ForegroundColor White
 
-    Write-Host "`nNEW IN v2.0:" -ForegroundColor Yellow
-    Write-Host "  • Modular architecture with separated concerns" -ForegroundColor Green
-    Write-Host "  • File-based logging support" -ForegroundColor Green
-    Write-Host "  • Externalized configuration (JSON)" -ForegroundColor Green
-    Write-Host "  • Template-based HTML generation" -ForegroundColor Green
-    Write-Host "  • Comprehensive error handling" -ForegroundColor Green
+    Write-Host "`nFEATURES:" -ForegroundColor Yellow
+    Write-Host "  - Modular architecture with separated concerns" -ForegroundColor Green
+    Write-Host "  - Category filtering with ExcludeCategories parameter" -ForegroundColor Green
+    Write-Host "  - CSV export for spreadsheet analysis" -ForegroundColor Green
+    Write-Host "  - File-based logging support" -ForegroundColor Green
+    Write-Host "  - Externalized configuration (JSON)" -ForegroundColor Green
+    Write-Host "  - Template-based HTML generation" -ForegroundColor Green
 
     Write-Host "`nREQUIREMENTS:" -ForegroundColor Yellow
-    Write-Host "  • Microsoft Graph PowerShell SDK" -ForegroundColor White
-    Write-Host "  • SecurityEvents.Read.All permission" -ForegroundColor White
-    Write-Host "  • Security Reader or Global Reader role" -ForegroundColor White
+    Write-Host "  - Microsoft Graph PowerShell SDK" -ForegroundColor White
+    Write-Host "  - SecurityEvents.Read.All permission" -ForegroundColor White
+    Write-Host "  - Security Reader or Global Reader role" -ForegroundColor White
 
     Write-Host "`nLINKS:" -ForegroundColor Yellow
     Write-Host "  GitHub: https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit" -ForegroundColor Cyan
@@ -490,9 +606,10 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host ""
 }
 
-# Export module members
+# Export only public functions - internal functions remain private
 Export-ModuleMember -Function @(
     'Connect-MicrosoftSecureScore',
+    'Disconnect-MicrosoftSecureScore',
     'Invoke-MicrosoftSecureScore',
     'Get-MicrosoftSecureScoreInfo'
 )

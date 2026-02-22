@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-Assessment-Toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.1.0'
+ModuleVersion = '2.2.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -27,7 +27,7 @@ Author = 'Mohammed Siddiqui'
 CompanyName = 'Community'
 
 # Copyright statement for this module
-Copyright = '(c) 2025 Mohammed Siddiqui. All rights reserved. MIT License.'
+Copyright = '(c) 2025-present Mohammed Siddiqui. All rights reserved. MIT License.'
 
 # Description of the functionality provided by this module
 Description = 'A powerful PowerShell toolkit for assessing Microsoft 365 security posture through the Microsoft Secure Score API. Generate comprehensive, interactive HTML reports with 411+ security controls directly from Microsoft Graph API. Features include real-time data fetching, interactive filtering, floating action buttons, and direct links to configuration portals. Perfect for security assessments, compliance reporting, and continuous security monitoring.'
@@ -71,6 +71,7 @@ PowerShellVersion = '5.1'
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
     'Connect-MicrosoftSecureScore',
+    'Disconnect-MicrosoftSecureScore',
     'Invoke-MicrosoftSecureScore',
     'Get-MicrosoftSecureScoreInfo'
 )
@@ -96,6 +97,7 @@ FileList = @(
     'Microsoft-Secure-Score-Assessment-Toolkit.psd1',
     'README.md',
     'CHANGELOG.md',
+    'powershellnerdlogo.png',
     'Core/GraphApiClient.ps1',
     'Core/Logger.ps1',
     'Core/Models.ps1',
@@ -125,53 +127,35 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
-v2.1.0 Category Filtering Feature
+v2.2.0 CSV Export, Bug Fixes, and Quality Improvements
 
 NEW FEATURES
-ExcludeCategories Parameter: Filter out unwanted control categories from reports
-  - Skip specific categories like Exchange, SharePoint, Teams, etc.
-  - Supports multiple categories: -ExcludeCategories @("Exchange", "SharePoint")
-  - ValidateSet with tab-completion for valid categories
-  - Enhanced logging shows excluded categories and filtered control counts
-  - Valid categories: Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, Intune
+- CSV Export: New -CsvPath parameter exports all control data to CSV for spreadsheet analysis
+- Disconnect Function: New Disconnect-MicrosoftSecureScore for proper session cleanup
+- No-Open Switch: New -NoOpen parameter suppresses automatic browser launch
+
+BUG FIXES
+- Fixed division by zero when MaxScore is 0
+- Fixed missing closing div in HTML template causing layout issues
+- Fixed JavaScript filter crash in Firefox/Safari (implicit event variable)
+- Fixed score of 0 being silently dropped in report metadata
+- Fixed internal functions being leaked to user session (namespace pollution)
+- Fixed loading overlay never displaying
+- Fixed URL mapping using substring match instead of exact match
+- Fixed emoji characters showing as garbled text in reports
+- Fixed progress bar counting excluded controls incorrectly
+- Removed duplicate LinkedIn link in floating action menu
+- Removed stale third-party email from help function
 
 IMPROVEMENTS
-Better report filtering visibility with category exclusion counts
-Log output displays excluded categories at assessment start
-Summary includes total controls excluded by category filter
-
-v2.0.2 Repository URL Updates
-
-Updated all URLs to match renamed GitHub repository Microsoft Secure Score Assessment Toolkit.
-
-v2.0.1 PowerShell Gallery Package Fix
-
-Ensures modern template is included in PowerShell Gallery package.
-
-v2.0.0 Major Architecture Refactoring and Modern UI
-
-BREAKING CHANGES
-Complete code refactoring with modular architecture
-Enhanced modern dashboard UI with gradient design and animations
-
-NEW FEATURES
-Modular Architecture: Separated into Core, Processors, Reports, Templates, and Config directories
-File based Logging: New LogPath parameter for audit trails
-Template System: Maintainable HTML CSS JS files
-Config Management: URL mappings in JSON with 60+ mappings
-Modern UI: Circular score visualization, filter buttons, search functionality, animations
-HTML Processing: Converts API HTML to readable text with proper formatting
-
-IMPROVEMENTS
-GraphApiClient, ComplianceProcessor, UrlProcessor, HtmlReportGenerator, Logger modules
-Error handling with try catch blocks throughout
-Session state management for module reloads
-Comprehensive HTML entity decoding
-
-FIXED
-HTML tags displaying in descriptions
-Module reload preserves Graph connection context
-Empty string handling with fallback messages
+- O(n^2) array performance replaced with List collection
+- Removed redundant Import-Module calls across all functions
+- Removed dead JavaScript code (unused functions, setInterval, deprecated APIs)
+- Eliminated duplicate HTML stripping code in ComplianceProcessor
+- Version now read from manifest instead of hardcoded
+- Path validation for ReportPath, LogPath, and CsvPath
+- Replaced emoji characters with SVG icons for encoding compatibility
+- Updated info function with current features
 
 Full changelog at https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/blob/main/CHANGELOG.md
 '@

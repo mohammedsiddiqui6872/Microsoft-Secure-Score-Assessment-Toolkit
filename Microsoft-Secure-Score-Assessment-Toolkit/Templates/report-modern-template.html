@@ -124,34 +124,17 @@
         .logo {
             width: 40px;
             height: 40px;
-            background: var(--primary-gradient);
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: white;
             box-shadow: var(--shadow-md);
-            position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .logo::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
+        .logo img {
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transform: rotate(45deg);
-            animation: logoShine 3s ease-in-out infinite;
-        }
-
-        @keyframes logoShine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            object-fit: cover;
+            border-radius: 10px;
         }
 
         .header-title {
@@ -1310,7 +1293,7 @@
 </head>
 <body>
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-overlay active" id="loadingOverlay">
         <div class="loader">
             <div class="loader-ring"></div>
             <div class="loader-ring"></div>
@@ -1324,7 +1307,7 @@
             <div class="header-container">
                 <div class="header-left">
                     <div class="logo-container">
-                        <div class="logo">MS</div>
+                        <div class="logo"><img src="data:image/png;base64,{{LOGO_BASE64}}" alt="PowerShellNerd Logo"></div>
                         <div class="header-title">
                             <h1>Microsoft Secure Score Assessment Dashboard</h1>
                         </div>
@@ -1424,6 +1407,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </section>
 
@@ -1432,18 +1416,18 @@
             <div class="section-header">
                 <div class="filter-controls">
                     <div class="filter-group">
-                        <button class="filter-btn active" onclick="filterByStatus('all')">All</button>
-                        <button class="filter-btn" onclick="filterByStatus('compliant')">Compliant</button>
-                        <button class="filter-btn" onclick="filterByStatus('noncompliant')">Non-Compliant</button>
-                        <button class="filter-btn" onclick="filterByStatus('na')">Not Applicable</button>
+                        <button class="filter-btn active" onclick="filterByStatus('all', event)">All</button>
+                        <button class="filter-btn" onclick="filterByStatus('compliant', event)">Compliant</button>
+                        <button class="filter-btn" onclick="filterByStatus('noncompliant', event)">Non-Compliant</button>
+                        <button class="filter-btn" onclick="filterByStatus('na', event)">Not Applicable</button>
                     </div>
                     <div class="filter-group">
-                        <button class="filter-btn" onclick="filterByRisk('high')">High Risk</button>
-                        <button class="filter-btn" onclick="filterByRisk('medium')">Medium Risk</button>
-                        <button class="filter-btn" onclick="filterByRisk('low')">Low Risk</button>
+                        <button class="filter-btn" onclick="filterByRisk('high', event)">High Risk</button>
+                        <button class="filter-btn" onclick="filterByRisk('medium', event)">Medium Risk</button>
+                        <button class="filter-btn" onclick="filterByRisk('low', event)">Low Risk</button>
                     </div>
                     <div class="search-container">
-                        <span class="search-icon">🔍</span>
+                        <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></span>
                         <input type="text" class="search-input" placeholder="Search controls..." oninput="searchControls(this.value)">
                     </div>
                 </div>
@@ -1457,6 +1441,10 @@
         <!-- Floating Action Menu -->
         <div class="floating-menu" id="floatingMenu">
             <div class="fab-menu">
+                <a href="https://powershellnerd.com" target="_blank" class="fab-menu-item fab-menu-item-logo">
+                    <img src="data:image/png;base64,{{LOGO_BASE64}}" alt="PowerShellNerd" width="32" height="32" style="border-radius:50%;object-fit:cover;">
+                    <span class="fab-tooltip">PowerShellNerd</span>
+                </a>
                 <a href="https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit" target="_blank" class="fab-menu-item">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -1470,12 +1458,6 @@
                         <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
                     <span class="fab-tooltip">Report Issues</span>
-                </a>
-                <a href="https://www.linkedin.com/in/mohammedsiddiqui6872/" target="_blank" class="fab-menu-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    <span class="fab-tooltip">Let's Chat on LinkedIn!</span>
                 </a>
                 <a href="https://www.linkedin.com/in/mohammedsiddiqui6872/" target="_blank" class="fab-menu-item">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -1561,14 +1543,14 @@
         }
 
         // Filter controls by status
-        function filterByStatus(status) {
+        function filterByStatus(status, e) {
             const cards = document.querySelectorAll('.control-card');
             const buttons = document.querySelectorAll('.filter-btn');
-            
+
             // Update active button
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            e.target.classList.add('active');
+
             // Filter cards
             cards.forEach(card => {
                 if (status === 'all' || card.dataset.status === status) {
@@ -1581,14 +1563,14 @@
         }
 
         // Filter controls by risk level
-        function filterByRisk(risk) {
+        function filterByRisk(risk, e) {
             const cards = document.querySelectorAll('.control-card');
             const buttons = document.querySelectorAll('.filter-btn');
-            
+
             // Update active button
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
+            e.target.classList.add('active');
+
             // Filter cards
             cards.forEach(card => {
                 if (card.dataset.risk === risk) {
@@ -1624,38 +1606,9 @@
             menu.classList.toggle('active');
         }
 
-        // Export report functionality
-        function exportReport() {
-            // Show loading overlay
-            document.getElementById('loadingOverlay').classList.add('active');
-            
-            // Simulate export process
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.remove('active');
-                alert('Report exported successfully!');
-            }, 2000);
-        }
-
         // Print report
         function printReport() {
             window.print();
-        }
-
-        // Refresh data
-        function refreshData() {
-            // Show loading overlay
-            document.getElementById('loadingOverlay').classList.add('active');
-            
-            // Simulate data refresh
-            setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.remove('active');
-                location.reload();
-            }, 1500);
-        }
-
-        // Show help
-        function showHelp() {
-            alert('Help & Support\n\nFor assistance, please contact:\nsupport@gritservices.ae\n\nDocumentation available at:\nhttps://docs.microsoft.com/graph/api/');
         }
 
         // Smooth scroll behavior
@@ -1674,40 +1627,20 @@
 
         // Add keyboard navigation
         document.addEventListener('keydown', function(e) {
-            // ESC key closes floating menu
+            // ESC key closes floating menu and dropdown
             if (e.key === 'Escape') {
                 document.getElementById('floatingMenu').classList.remove('active');
+                const dropdown = document.querySelector('.tenant-dropdown');
+                const menu = document.getElementById('tenantDropdown');
+                if (dropdown) dropdown.classList.remove('active');
+                if (menu) menu.classList.remove('show');
             }
-            
+
             // Ctrl/Cmd + P for print
             if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
                 e.preventDefault();
                 printReport();
             }
-            
-            // Ctrl/Cmd + E for export
-            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
-                e.preventDefault();
-                exportReport();
-            }
-        });
-
-        // Add real-time clock
-        function updateClock() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            // You can add a clock element if needed
-        }
-        setInterval(updateClock, 1000);
-
-        // Performance monitoring
-        window.addEventListener('load', function() {
-            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-            console.log(`Page load time: ${loadTime}ms`);
         });
     </script>
 </body>

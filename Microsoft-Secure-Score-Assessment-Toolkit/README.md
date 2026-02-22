@@ -7,7 +7,7 @@
 [![CIS Benchmark](https://img.shields.io/badge/CIS%20Benchmark-Compatible-orange)](https://www.cisecurity.org/)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow.svg)](https://buymeacoffee.com/mohammedsiddiqui)
 
-A powerful PowerShell module for assessing Microsoft 365 security posture through the Microsoft Secure Score API. Generate comprehensive, interactive HTML reports with 411+ security controls directly from Microsoft Graph API.
+A powerful PowerShell module for assessing and managing Microsoft 365 security posture through the Microsoft Secure Score API. Generate comprehensive, interactive HTML reports with 411+ security controls directly from Microsoft Graph API.
 
 ---
 
@@ -33,6 +33,10 @@ A powerful PowerShell module for assessing Microsoft 365 security posture throug
 - **Floating Action Buttons**: Chatbot-style buttons for quick access to documentation and support
 
 ### 🎯 Smart Features
+- **Category Filtering**: Exclude specific control categories from reports (Exchange, SharePoint, Teams, etc.)
+- **CSV Export**: Export all control data to CSV for spreadsheet analysis and reporting
+- **Session Management**: Connect and Disconnect functions for proper Graph session lifecycle
+- **No-Open Mode**: Suppress automatic browser launch for headless/automated runs
 - **Tenant Attribution**: Shows tenant ID and user who generated the report
 - **Category Organization**: Controls grouped by security domains (Identity, Data, Device, Apps, Infrastructure)
 - **Risk-Based Prioritization**: Controls categorized as High, Medium, or Low risk
@@ -74,16 +78,17 @@ Your support helps maintain and improve this toolkit with new features, updates,
 
 ## 🚀 Quick Start
 
-### Basic Usage (3 Steps)
+### Basic Usage
 
 ```powershell
 # Step 1: Authenticate to Microsoft Graph
 Connect-MicrosoftSecureScore
 
-# Step 2: Generate assessment report
+# Step 2: Generate assessment report (auto-opens in browser)
 Invoke-MicrosoftSecureScore
 
-# Step 3: Open the generated HTML report
+# Step 3: When done, disconnect
+Disconnect-MicrosoftSecureScore
 ```
 
 That's it! The report will be saved in your current directory with a timestamp.
@@ -125,12 +130,20 @@ Invoke-MicrosoftSecureScore
     [-TenantName <String>]
     [-ApplicableOnly]
     [-ReportPath <String>]
+    [-LogPath <String>]
+    [-CsvPath <String>]
+    [-NoOpen]
+    [-ExcludeCategories <String[]>]
 ```
 
 **Parameters:**
 - `-TenantName`: Display name for your organization in the report (default: "Your Organization")
 - `-ApplicableOnly`: Show only controls applicable to your tenant (~70 controls instead of 411+)
 - `-ReportPath`: Custom path for the HTML report (default: current directory with timestamp)
+- `-LogPath`: Path where the log file will be saved (optional)
+- `-CsvPath`: Path where the CSV export will be saved (optional)
+- `-NoOpen`: Do not automatically open the report in the default browser
+- `-ExcludeCategories`: Array of category names to exclude from the report. Valid categories: Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, Intune
 
 **Examples:**
 ```powershell
@@ -146,8 +159,36 @@ Invoke-MicrosoftSecureScore -TenantName "Contoso Corporation"
 # Custom report path
 Invoke-MicrosoftSecureScore -ReportPath "C:\Reports\SecureScore.html"
 
-# Combine parameters
-Invoke-MicrosoftSecureScore -TenantName "Contoso" -ApplicableOnly -ReportPath "C:\Reports\Contoso-SecureScore.html"
+# Export results to CSV for spreadsheet analysis
+Invoke-MicrosoftSecureScore -CsvPath "C:\Reports\SecureScore.csv"
+
+# Generate report without opening browser (for automation)
+Invoke-MicrosoftSecureScore -NoOpen
+
+# Exclude Exchange controls from report
+Invoke-MicrosoftSecureScore -ExcludeCategories "Exchange"
+
+# Exclude multiple categories
+Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint", "Teams")
+
+# Full example with all options
+Invoke-MicrosoftSecureScore -TenantName "Contoso" -ApplicableOnly -ExcludeCategories @("Exchange") -ReportPath "C:\Reports\Contoso.html" -CsvPath "C:\Reports\Contoso.csv" -LogPath "C:\Logs\assessment.log" -NoOpen
+```
+
+---
+
+### Disconnect-MicrosoftSecureScore
+
+Disconnect from Microsoft Graph and clean up session.
+
+**Syntax:**
+```powershell
+Disconnect-MicrosoftSecureScore
+```
+
+**Example:**
+```powershell
+Disconnect-MicrosoftSecureScore
 ```
 
 ---
@@ -200,14 +241,38 @@ Connect-MicrosoftSecureScore
 Invoke-MicrosoftSecureScore -TenantName "Fabrikam Inc" -ReportPath "C:\Reports\Fabrikam.html"
 ```
 
-### Scenario 4: Scheduled Reporting
+### Scenario 4: Category Filtering
 
 ```powershell
-# Create a scheduled task to run daily
+# Focus only on Identity and Defender controls, excluding other categories
+Connect-MicrosoftSecureScore
+Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint", "Teams", "Groups", "Compliance", "Intune")
+
+# Skip Exchange and SharePoint for cloud-only environments
+Invoke-MicrosoftSecureScore -ExcludeCategories @("Exchange", "SharePoint")
+
+# Generate report excluding categories you don't manage
+Invoke-MicrosoftSecureScore -TenantName "Contoso" -ExcludeCategories @("Intune", "Teams") -ApplicableOnly
+```
+
+### Scenario 5: CSV Export for Analysis
+
+```powershell
+# Export to CSV for spreadsheet analysis or SIEM integration
+Connect-MicrosoftSecureScore
+Invoke-MicrosoftSecureScore -CsvPath "C:\Reports\SecureScore.csv" -NoOpen
+Disconnect-MicrosoftSecureScore
+```
+
+### Scenario 6: Scheduled Reporting
+
+```powershell
+# Create a scheduled task to run daily (headless mode)
 $scriptBlock = {
     Import-Module Microsoft-Secure-Score-Assessment-Toolkit
     Connect-MicrosoftSecureScore
-    Invoke-MicrosoftSecureScore -ReportPath "C:\Reports\Daily-SecureScore-$(Get-Date -Format 'yyyyMMdd').html"
+    Invoke-MicrosoftSecureScore -ReportPath "C:\Reports\Daily-SecureScore-$(Get-Date -Format 'yyyyMMdd').html" -CsvPath "C:\Reports\Daily-SecureScore-$(Get-Date -Format 'yyyyMMdd').csv" -NoOpen
+    Disconnect-MicrosoftSecureScore
 }
 
 # Run via Task Scheduler or Azure Automation
@@ -303,7 +368,7 @@ Every report includes:
 
 ```powershell
 # Disconnect and reconnect
-Disconnect-MgGraph
+Disconnect-MicrosoftSecureScore
 Connect-MicrosoftSecureScore
 ```
 
@@ -338,6 +403,24 @@ Invoke-MicrosoftSecureScore
 ---
 
 ## 📝 Changelog
+
+### [2.2.0] - 2026-02-22
+**CSV Export, Bug Fixes, and Quality Improvements:**
+- **CSV Export**: New `-CsvPath` parameter exports all control data to CSV for spreadsheet analysis
+- **Disconnect Function**: New `Disconnect-MicrosoftSecureScore` for proper session cleanup
+- **No-Open Switch**: New `-NoOpen` parameter suppresses automatic browser launch (ideal for automation)
+- **PowerShellNerd Branding**: Logo in header and floating action menu
+- **8 Bug Fixes**: Division by zero, Firefox/Safari filter crash, broken HTML layout, emoji encoding, namespace pollution, loading overlay, URL matching, stale references
+- **Performance**: Replaced O(n^2) array operations with List collection, removed redundant imports
+- **Code Quality**: Eliminated duplicate code, removed dead JavaScript, path validation, version from manifest
+
+### [2.1.0] - 2026-02-01
+**Category Filtering Feature:**
+- **ExcludeCategories Parameter**: New parameter to exclude specific control categories from reports
+- **Category Options**: Filter out Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, or Intune controls
+- **Multiple Category Support**: Exclude multiple categories using array syntax: `-ExcludeCategories @("Exchange", "SharePoint")`
+- **ValidateSet Tab-Completion**: Valid category names enforced with PowerShell tab-completion
+- **Enhanced Logging**: Shows excluded categories and count of filtered controls in log output
 
 ### [1.3.1] - 2025-11-14
 **Complete Entra Portal Migration & Enhanced URL Mappings:**
@@ -468,4 +551,4 @@ This toolkit is not affiliated with or endorsed by Microsoft Corporation. Micros
 
 **Generated with** ❤️ **for better security posture**
 
-© 2025 Mohammed Siddiqui. All rights reserved.
+© 2025-present Mohammed Siddiqui. All rights reserved.

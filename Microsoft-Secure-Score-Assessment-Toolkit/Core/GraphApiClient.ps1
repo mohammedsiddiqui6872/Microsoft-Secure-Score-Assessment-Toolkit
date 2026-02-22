@@ -104,9 +104,6 @@ function Get-SecureScoreData {
     param()
 
     try {
-        # Ensure Security module is loaded
-        Import-Module Microsoft.Graph.Security -ErrorAction Stop
-
         $allScores = Get-MgSecuritySecureScore -Top 1 -ErrorAction Stop
 
         # Handle both array and single object returns
@@ -167,9 +164,6 @@ function Get-SecureScoreControlProfiles {
     )
 
     try {
-        # Ensure Security module is loaded
-        Import-Module Microsoft.Graph.Security -ErrorAction Stop
-
         $controls = Get-MgSecuritySecureScoreControlProfile -All -ErrorAction Stop
 
         if ($FilterApplicableOnly -and $ScoredControlsList) {
@@ -198,9 +192,6 @@ function Get-OrganizationInfo {
     param()
 
     try {
-        # Ensure required module is loaded (part of Authentication module)
-        Import-Module Microsoft.Graph.Authentication -ErrorAction Stop
-
         $organization = Get-MgOrganization -ErrorAction Stop
 
         if ($organization) {
@@ -251,10 +242,4 @@ function Test-GraphConnection {
     }
 }
 
-Export-ModuleMember -Function @(
-    'Connect-SecureScoreGraph',
-    'Get-SecureScoreData',
-    'Get-SecureScoreControlProfiles',
-    'Get-OrganizationInfo',
-    'Test-GraphConnection'
-)
+# Functions are exported via the main module manifest (.psd1)

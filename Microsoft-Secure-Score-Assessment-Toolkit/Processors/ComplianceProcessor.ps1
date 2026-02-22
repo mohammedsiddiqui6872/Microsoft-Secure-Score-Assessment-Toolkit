@@ -137,33 +137,7 @@ function Get-ControlCurrentValue {
         $currentValue = "Score: $actualScore / $MaxScore points"
 
         if ($scoreData.Description) {
-            # Convert HTML to plain text if description contains HTML tags
-            $description = $scoreData.Description
-            if ($description -match '<[^>]+>') {
-                # Remove HTML tags
-                $description = $description -replace '<br\s*/?>',  "`n"
-                $description = $description -replace '<p>', "`n"
-                $description = $description -replace '</p>', "`n"
-                $description = $description -replace '<li>', "`n• "
-                $description = $description -replace '</li>', ''
-                $description = $description -replace '<ul>', ''
-                $description = $description -replace '</ul>', ''
-                $description = $description -replace '<strong>', ''
-                $description = $description -replace '</strong>', ''
-                $description = $description -replace '<h\d>', ''
-                $description = $description -replace '</h\d>', ''
-                $description = $description -replace '<[^>]+>', ''
-                $description = $description -replace '&nbsp;', ' '
-                $description = $description -replace '&lt;', '<'
-                $description = $description -replace '&gt;', '>'
-                $description = $description -replace '&amp;', '&'
-                $description = $description -replace '&quot;', '"'
-                $description = $description -replace '&lsquo;', "'"
-                $description = $description -replace '&rsquo;', "'"
-                $description = $description -replace '&ldquo;', '"'
-                $description = $description -replace '&rdquo;', '"'
-                $description = $description.Trim()
-            }
+            $description = ConvertFrom-HtmlString -HtmlText $scoreData.Description
             $currentValue += " - " + $description
         }
 
@@ -342,12 +316,4 @@ function Test-ControlDataValid {
     return $true
 }
 
-Export-ModuleMember -Function @(
-    'Get-RiskLevel',
-    'Get-ComplianceStatus',
-    'Get-ControlCurrentValue',
-    'Get-ControlProposedValue',
-    'Get-ControlJustification',
-    'Get-ScoreImpact',
-    'Test-ControlDataValid'
-)
+# Functions are exported via the main module manifest (.psd1)

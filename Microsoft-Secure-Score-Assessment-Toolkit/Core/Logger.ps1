@@ -258,11 +258,4 @@ Log session ended: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
     $script:LogToFile = $false
 }
 
-Export-ModuleMember -Function @(
-    'Initialize-Logger',
-    'Write-Log',
-    'Write-LogSection',
-    'Write-LogProgress',
-    'Get-LogPath',
-    'Close-Logger'
-)
+# Functions are exported via the main module manifest (.psd1)
