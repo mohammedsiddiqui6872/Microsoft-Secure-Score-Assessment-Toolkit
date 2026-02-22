@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-Assessment-Toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.2.0'
+ModuleVersion = '2.2.1'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -127,6 +127,11 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
+v2.2.1 Encoding Fix
+
+- Fixed non-ASCII characters (bullets, em dashes, smart quotes) displaying as garbled text in reports
+- All non-ASCII characters now encoded as HTML numeric entities for reliable rendering
+
 v2.2.0 CSV Export, Bug Fixes, and Quality Improvements
 
 NEW FEATURES
