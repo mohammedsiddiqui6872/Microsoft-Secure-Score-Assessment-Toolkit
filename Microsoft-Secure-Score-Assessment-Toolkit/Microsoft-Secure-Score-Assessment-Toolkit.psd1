@@ -98,8 +98,6 @@ AliasesToExport = @()
 FileList = @(
     'Microsoft-Secure-Score-Assessment-Toolkit.psm1',
     'Microsoft-Secure-Score-Assessment-Toolkit.psd1',
-    'README.md',
-    'CHANGELOG.md',
     'powershellnerdlogo.png',
     'Core/GraphApiClient.ps1',
     'Core/Logger.ps1',
