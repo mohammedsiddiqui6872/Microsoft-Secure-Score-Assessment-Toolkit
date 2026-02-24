@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2026-02-24
+
+### Bug Fixes
+- Fixed composable filter system: status + risk + search filters now work together correctly
+- Added "All" reset button to risk filter group
+- Fixed progress bar counting excluded controls incorrectly
+- Fixed `Get-OrganizationInfo` not handling array return from API
+- Fixed 2 GitHub controls (`MDA_GitHub_*`) silently dropped due to non-HTTP ActionUrl validation
+- Non-standard ActionUrls now fall back to portal keyword match instead of rejecting the control
+
+### Performance
+- Replaced string concatenation with `StringBuilder` in HTML report generation
+- Replaced O(n*m) nested loop with O(1) hashtable lookup for URL control mappings
+- Async Google Fonts loading prevents render-blocking in offline environments
+
+### Security
+- Removed dangerous auto-install with `-Force -AllowClobber` (supply chain risk); module now throws with install instructions
+- Prevented sovereign cloud URLs (`.azure.us`, `.azure.cn`, `.microsoftazure.de`) from being rewritten to commercial domains
+- Replaced empty catch block with diagnostic `Write-Verbose` logging
+
+### Portal URL Modernization
+- Migrated all `compliance.microsoft.com` URLs to `purview.microsoft.com` (retired late 2024)
+- Added URL rewrite rule to auto-correct API-returned `compliance.microsoft.com` URLs
+- Added 6 new control-to-portal URL mappings (71 total), eliminating all docs-only URLs
+- Added "Purview" keyword to compliance fallback rule
+
+### Module Quality
+- Declared `RequiredModules` in manifest (`Microsoft.Graph.Authentication` and `Microsoft.Graph.Security` >= 2.28.0)
+- Cross-platform paths via `Join-Path` throughout module loader
+- Clean up all module state in `Disconnect-MicrosoftSecureScore` finally block
+- `Get-MicrosoftSecureScoreInfo` returns `PSCustomObject` for programmatic access
+- Force array context with `@()` on API collection returns
+- Added `-ErrorAction` to all critical cmdlet calls
+
 ## [1.4.0] - 2025-11-18
 
 ### Changed

@@ -12,7 +12,7 @@
 RootModule = 'Microsoft-Secure-Score-Assessment-Toolkit.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.2.1'
+ModuleVersion = '2.3.0'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -130,40 +130,39 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
-v2.2.1 Encoding Fix
-
-- Fixed non-ASCII characters (bullets, em dashes, smart quotes) displaying as garbled text in reports
-- All non-ASCII characters now encoded as HTML numeric entities for reliable rendering
-
-v2.2.0 CSV Export, Bug Fixes, and Quality Improvements
-
-NEW FEATURES
-- CSV Export: New -CsvPath parameter exports all control data to CSV for spreadsheet analysis
-- Disconnect Function: New Disconnect-MicrosoftSecureScore for proper session cleanup
-- No-Open Switch: New -NoOpen parameter suppresses automatic browser launch
+v2.3.0 Security Hardening, Performance Fixes, and Portal URL Modernization
 
 BUG FIXES
-- Fixed division by zero when MaxScore is 0
-- Fixed missing closing div in HTML template causing layout issues
-- Fixed JavaScript filter crash in Firefox/Safari (implicit event variable)
-- Fixed score of 0 being silently dropped in report metadata
-- Fixed internal functions being leaked to user session (namespace pollution)
-- Fixed loading overlay never displaying
-- Fixed URL mapping using substring match instead of exact match
-- Fixed emoji characters showing as garbled text in reports
+- Fixed composable filter system: status + risk + search filters now work together
+- Added "All" reset button to risk filter group
 - Fixed progress bar counting excluded controls incorrectly
-- Removed duplicate LinkedIn link in floating action menu
-- Removed stale third-party email from help function
+- Fixed Get-OrganizationInfo not handling array return from API
+- Fixed 2 GitHub controls silently dropped due to non-HTTP ActionUrl validation
+- Non-standard ActionUrls now fall back to portal keyword match instead of rejecting the control
 
-IMPROVEMENTS
-- O(n^2) array performance replaced with List collection
-- Removed redundant Import-Module calls across all functions
-- Removed dead JavaScript code (unused functions, setInterval, deprecated APIs)
-- Eliminated duplicate HTML stripping code in ComplianceProcessor
-- Version now read from manifest instead of hardcoded
-- Path validation for ReportPath, LogPath, and CsvPath
-- Replaced emoji characters with SVG icons for encoding compatibility
-- Updated info function with current features
+PERFORMANCE
+- Replaced string concatenation with StringBuilder in HTML report generation
+- Replaced O(n*m) nested loop with O(1) hashtable lookup for URL mappings
+- Async Google Fonts loading prevents render-blocking in offline environments
+
+SECURITY
+- Removed dangerous auto-install with -Force -AllowClobber (supply chain risk)
+- Prevented sovereign cloud URLs from being rewritten to commercial domains
+- Replaced empty catch block with diagnostic logging
+
+PORTAL URL MODERNIZATION
+- Migrated all compliance.microsoft.com URLs to purview.microsoft.com (retired late 2024)
+- Added URL rewrite rule to auto-correct API-returned compliance.microsoft.com URLs
+- Added 6 new control-to-portal URL mappings (71 total), eliminating all docs-only URLs
+- Added "Purview" keyword to compliance fallback rule
+
+MODULE QUALITY
+- Declared RequiredModules in manifest (Microsoft.Graph SDK >= 2.28.0)
+- Cross-platform paths via Join-Path throughout module loader
+- Clean up all module state in Disconnect finally block
+- Get-MicrosoftSecureScoreInfo returns PSCustomObject for programmatic access
+- Force array context with @() on API collection returns
+- Added -ErrorAction to all critical cmdlet calls
 
 Full changelog at https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/blob/main/CHANGELOG.md
 '@
