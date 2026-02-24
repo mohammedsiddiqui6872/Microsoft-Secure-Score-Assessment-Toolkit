@@ -6,20 +6,20 @@
 # Module base path
 $script:ModuleRoot = $PSScriptRoot
 
-# Import all required modules
+# Import all required modules (use Join-Path for cross-platform compatibility)
 $CoreModules = @(
-    'Core\GraphApiClient.ps1',
-    'Core\Models.ps1',
-    'Core\Logger.ps1'
+    (Join-Path 'Core' 'GraphApiClient.ps1'),
+    (Join-Path 'Core' 'Models.ps1'),
+    (Join-Path 'Core' 'Logger.ps1')
 )
 
 $ProcessorModules = @(
-    'Processors\ComplianceProcessor.ps1',
-    'Processors\UrlProcessor.ps1'
+    (Join-Path 'Processors' 'ComplianceProcessor.ps1'),
+    (Join-Path 'Processors' 'UrlProcessor.ps1')
 )
 
 $ReportModules = @(
-    'Reports\HtmlReportGenerator.ps1'
+    (Join-Path 'Reports' 'HtmlReportGenerator.ps1')
 )
 
 # Import all modules - fail fast if any are missing
@@ -78,15 +78,8 @@ function Connect-MicrosoftSecureScore {
         )
 
         foreach ($moduleName in $requiredModules) {
-            if (-not (Get-Module -ListAvailable -Name $moduleName)) {
-                Write-Host "$moduleName module not found. Installing..." -ForegroundColor Yellow
-                try {
-                    Install-Module -Name $moduleName -Scope CurrentUser -Force -AllowClobber
-                    Write-Host "$moduleName module installed successfully." -ForegroundColor Green
-                }
-                catch {
-                    throw "Failed to install $moduleName module: $_"
-                }
+            if (-not (Get-Module -ListAvailable -Name $moduleName -ErrorAction SilentlyContinue)) {
+                throw "$moduleName module is not installed. Please install it first:`n  Install-Module -Name $moduleName -Scope CurrentUser"
             }
         }
 
@@ -134,12 +127,20 @@ function Disconnect-MicrosoftSecureScore {
 
     try {
         Disconnect-MgGraph -ErrorAction SilentlyContinue | Out-Null
-        $script:CurrentContext = $null
         Write-Host "Disconnected from Microsoft Graph successfully." -ForegroundColor Green
     }
     catch {
         Write-Warning "Error during disconnect: $_"
+    }
+    finally {
+        # Clean up all module-level state
         $script:CurrentContext = $null
+        $script:ControlMappingsCache = $null
+        $script:ControlMappingsFlat = $null
+        $script:ConfigPath = $null
+        $script:LogFilePath = $null
+        $script:LogToFile = $false
+        $script:LogToConsole = $true
     }
 }
 
@@ -149,7 +150,7 @@ function Invoke-MicrosoftSecureScore {
         Generate Microsoft Secure Score assessment report.
 
     .DESCRIPTION
-        Fetches 411+ security controls from Microsoft Graph Secure Score API and generates
+        Fetches 400+ security controls from Microsoft Graph Secure Score API and generates
         a comprehensive HTML report with interactive filtering and assessment guidance.
 
     .PARAMETER TenantName
@@ -157,7 +158,7 @@ function Invoke-MicrosoftSecureScore {
 
     .PARAMETER ApplicableOnly
         Generate report showing only controls applicable to your tenant (typically ~70 controls).
-        By default, shows all 411+ available controls.
+        By default, shows all 400+ available controls.
 
     .PARAMETER ReportPath
         Path where the HTML report will be saved. Defaults to current directory with timestamp.
@@ -177,7 +178,7 @@ function Invoke-MicrosoftSecureScore {
 
     .EXAMPLE
         Invoke-MicrosoftSecureScore
-        Generates a full report with all 411+ controls.
+        Generates a full report with all 400+ controls.
 
     .EXAMPLE
         Invoke-MicrosoftSecureScore -ApplicableOnly
@@ -298,7 +299,7 @@ function Invoke-MicrosoftSecureScore {
         }
 
         # Initialize URL processor with config
-        $configPath = Join-Path $script:ModuleRoot "Config\control-mappings.json"
+        $configPath = Join-Path $script:ModuleRoot (Join-Path 'Config' 'control-mappings.json')
         Initialize-UrlProcessor -ConfigPath $configPath
         Write-Log "URL processor initialized with mappings from config" -Level Success
 
@@ -360,16 +361,23 @@ function Invoke-MicrosoftSecureScore {
             -MaxScore $scoreData.MaxScore
 
         # Process each control
-        $totalControls = $controls.Count
+        # Pre-calculate the effective total for stable progress reporting
+        $excludedCount = 0
+        if ($ExcludeCategories -and $ExcludeCategories.Count -gt 0) {
+            foreach ($ctrl in $controls) {
+                if ($ctrl.ControlCategory -in $ExcludeCategories) {
+                    $excludedCount++
+                }
+            }
+        }
+        $effectiveTotal = $controls.Count - $excludedCount
         $processedCount = 0
         $skippedCount = 0
-        $excludedCount = 0
 
         foreach ($control in $controls) {
             # Check if category should be excluded (before incrementing processed count)
             if ($ExcludeCategories -and $ExcludeCategories.Count -gt 0) {
                 if ($control.ControlCategory -in $ExcludeCategories) {
-                    $excludedCount++
                     Write-Log "Excluded control from category '$($control.ControlCategory)': $($control.Title)" -Level Info -NoConsole
                     continue
                 }
@@ -377,11 +385,13 @@ function Invoke-MicrosoftSecureScore {
 
             $processedCount++
 
-            # Log progress (based on non-excluded controls)
-            Write-LogProgress -Activity "Processing Secure Score Controls" `
-                -Current $processedCount `
-                -Total ($totalControls - $excludedCount) `
-                -FileLogInterval 50
+            # Log progress (based on pre-calculated non-excluded total)
+            if ($effectiveTotal -gt 0) {
+                Write-LogProgress -Activity "Processing Secure Score Controls" `
+                    -Current $processedCount `
+                    -Total $effectiveTotal `
+                    -FileLogInterval 50
+            }
 
             # Validate control data
             if (-not (Test-ControlDataValid -Control $control)) {
@@ -531,12 +541,22 @@ function Get-MicrosoftSecureScoreInfo {
 
     .DESCRIPTION
         Shows version information, usage instructions, and helpful links for the toolkit.
+        Returns a PSCustomObject with module metadata for programmatic access.
 
     .EXAMPLE
         Get-MicrosoftSecureScoreInfo
         Displays toolkit information and usage guide.
+
+    .EXAMPLE
+        $info = Get-MicrosoftSecureScoreInfo
+        $info.Version
+        Gets the toolkit version programmatically.
+
+    .OUTPUTS
+        PSCustomObject containing Version, Description, Features, Requirements, and Links.
     #>
     [CmdletBinding()]
+    [OutputType([PSCustomObject])]
     param()
 
     # Read version from module manifest
@@ -566,7 +586,7 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host "     Authenticate to Microsoft Graph" -ForegroundColor Gray
     Write-Host ""
     Write-Host "  2. Invoke-MicrosoftSecureScore" -ForegroundColor Green
-    Write-Host "     Generate full assessment report with 411+ controls" -ForegroundColor Gray
+    Write-Host "     Generate full assessment report with 400+ controls" -ForegroundColor Gray
     Write-Host ""
     Write-Host "  3. Disconnect-MicrosoftSecureScore" -ForegroundColor Green
     Write-Host "     Clean up Microsoft Graph session" -ForegroundColor Gray
@@ -604,6 +624,31 @@ function Get-MicrosoftSecureScoreInfo {
     Write-Host "`nSUPPORT:" -ForegroundColor Yellow
     Write-Host "  Buy Me a Coffee: https://buymeacoffee.com/mohammedsiddiqui" -ForegroundColor Magenta
     Write-Host ""
+
+    # Return structured object for programmatic access
+    return [PSCustomObject]@{
+        Version      = $version
+        Description  = "PowerShell toolkit for assessing Microsoft 365 security posture through Microsoft Secure Score API"
+        Features     = @(
+            "Modular architecture with separated concerns",
+            "Category filtering with ExcludeCategories parameter",
+            "CSV export for spreadsheet analysis",
+            "File-based logging support",
+            "Externalized configuration (JSON)",
+            "Template-based HTML generation"
+        )
+        Requirements = @(
+            "Microsoft.Graph.Authentication module",
+            "Microsoft.Graph.Security module",
+            "SecurityEvents.Read.All permission",
+            "Security Reader or Global Reader role"
+        )
+        Links        = @{
+            GitHub  = "https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit"
+            Issues  = "https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues"
+            Support = "https://buymeacoffee.com/mohammedsiddiqui"
+        }
+    }
 }
 
 # Export only public functions - internal functions remain private

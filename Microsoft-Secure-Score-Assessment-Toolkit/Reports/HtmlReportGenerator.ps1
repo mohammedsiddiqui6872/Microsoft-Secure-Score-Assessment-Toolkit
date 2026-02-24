@@ -142,7 +142,7 @@ function Build-ControlCards {
         [hashtable]$ReportData
     )
 
-    $controlCardsHtml = ""
+    $sb = [System.Text.StringBuilder]::new(4096)
 
     # Sort controls by risk (High first), then by compliance status
     $sortedControls = $ReportData.ProposedChanges | Sort-Object @{
@@ -164,10 +164,10 @@ function Build-ControlCards {
     }
 
     foreach ($item in $sortedControls) {
-        $controlCardsHtml += Build-ModernControlCard -Item $item
+        [void]$sb.Append((Build-ModernControlCard -Item $item))
     }
 
-    return $controlCardsHtml
+    return $sb.ToString()
 }
 
 function Build-ModernControlCard {

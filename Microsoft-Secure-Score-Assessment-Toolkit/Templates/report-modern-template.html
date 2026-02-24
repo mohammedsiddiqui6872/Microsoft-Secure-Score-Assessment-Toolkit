@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Microsoft Secure Score Assessment Dashboard - {{TENANT_NAME}}</title>
     
-    <!-- Professional Font Stack -->
+    <!-- Professional Font Stack (optional — report renders fully with system fonts if offline) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+
     <style>
         :root {
             /* Modern Color Palette */
@@ -1415,13 +1416,14 @@
         <section class="categories-section">
             <div class="section-header">
                 <div class="filter-controls">
-                    <div class="filter-group">
+                    <div class="filter-group" data-filter-type="status">
                         <button class="filter-btn active" onclick="filterByStatus('all', event)">All</button>
                         <button class="filter-btn" onclick="filterByStatus('compliant', event)">Compliant</button>
                         <button class="filter-btn" onclick="filterByStatus('noncompliant', event)">Non-Compliant</button>
                         <button class="filter-btn" onclick="filterByStatus('na', event)">Not Applicable</button>
                     </div>
-                    <div class="filter-group">
+                    <div class="filter-group" data-filter-type="risk">
+                        <button class="filter-btn active" onclick="filterByRisk('all', event)">All</button>
                         <button class="filter-btn" onclick="filterByRisk('high', event)">High Risk</button>
                         <button class="filter-btn" onclick="filterByRisk('medium', event)">Medium Risk</button>
                         <button class="filter-btn" onclick="filterByRisk('low', event)">Low Risk</button>
@@ -1542,62 +1544,52 @@
             card.classList.toggle('expanded');
         }
 
-        // Filter controls by status
+        // Active filter state — composable filters
+        let activeStatusFilter = 'all';
+        let activeRiskFilter = 'all';
+        let activeSearchTerm = '';
+
+        // Apply all active filters together
+        function applyFilters() {
+            const cards = document.querySelectorAll('.control-card');
+            cards.forEach(card => {
+                const matchesStatus = activeStatusFilter === 'all' || card.dataset.status === activeStatusFilter;
+                const matchesRisk = activeRiskFilter === 'all' || card.dataset.risk === activeRiskFilter;
+                const matchesSearch = activeSearchTerm === '' ||
+                    card.querySelector('.control-title').textContent.toLowerCase().includes(activeSearchTerm) ||
+                    card.querySelector('.control-category').textContent.toLowerCase().includes(activeSearchTerm);
+
+                if (matchesStatus && matchesRisk && matchesSearch) {
+                    card.style.display = 'block';
+                    setTimeout(() => card.classList.add('fade-in'), 10);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Filter controls by status — scoped to own group
         function filterByStatus(status, e) {
-            const cards = document.querySelectorAll('.control-card');
-            const buttons = document.querySelectorAll('.filter-btn');
-
-            // Update active button
-            buttons.forEach(btn => btn.classList.remove('active'));
+            activeStatusFilter = status;
+            const group = e.target.closest('.filter-group');
+            group.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-
-            // Filter cards
-            cards.forEach(card => {
-                if (status === 'all' || card.dataset.status === status) {
-                    card.style.display = 'block';
-                    setTimeout(() => card.classList.add('fade-in'), 10);
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            applyFilters();
         }
 
-        // Filter controls by risk level
+        // Filter controls by risk level — scoped to own group
         function filterByRisk(risk, e) {
-            const cards = document.querySelectorAll('.control-card');
-            const buttons = document.querySelectorAll('.filter-btn');
-
-            // Update active button
-            buttons.forEach(btn => btn.classList.remove('active'));
+            activeRiskFilter = risk;
+            const group = e.target.closest('.filter-group');
+            group.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-
-            // Filter cards
-            cards.forEach(card => {
-                if (card.dataset.risk === risk) {
-                    card.style.display = 'block';
-                    setTimeout(() => card.classList.add('fade-in'), 10);
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            applyFilters();
         }
 
-        // Search controls
+        // Search controls — composable with status/risk filters
         function searchControls(query) {
-            const cards = document.querySelectorAll('.control-card');
-            const searchTerm = query.toLowerCase();
-            
-            cards.forEach(card => {
-                const title = card.querySelector('.control-title').textContent.toLowerCase();
-                const category = card.querySelector('.control-category').textContent.toLowerCase();
-                
-                if (title.includes(searchTerm) || category.includes(searchTerm)) {
-                    card.style.display = 'block';
-                    setTimeout(() => card.classList.add('fade-in'), 10);
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            activeSearchTerm = query.toLowerCase();
+            applyFilters();
         }
 
         // Toggle floating action menu

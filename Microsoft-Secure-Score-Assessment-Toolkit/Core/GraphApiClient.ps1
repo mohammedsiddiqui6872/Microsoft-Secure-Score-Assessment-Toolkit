@@ -51,7 +51,7 @@ function Connect-SecureScoreGraph {
             Disconnect-MgGraph -ErrorAction SilentlyContinue | Out-Null
         }
         catch {
-            # Ignore disconnect errors
+            Write-Verbose "Previous session disconnect returned an error (non-critical): $_"
         }
 
         # Connect to Microsoft Graph with appropriate method
@@ -143,7 +143,7 @@ function Get-SecureScoreControlProfiles {
         Retrieves all secure score control profiles from Microsoft Graph API.
 
     .DESCRIPTION
-        Fetches all available secure score control profiles (411+ controls).
+        Fetches all available secure score control profiles (400+ controls).
 
     .PARAMETER FilterApplicableOnly
         If specified, returns only controls that are being scored in the tenant.
@@ -164,10 +164,10 @@ function Get-SecureScoreControlProfiles {
     )
 
     try {
-        $controls = Get-MgSecuritySecureScoreControlProfile -All -ErrorAction Stop
+        $controls = @(Get-MgSecuritySecureScoreControlProfile -All -ErrorAction Stop)
 
         if ($FilterApplicableOnly -and $ScoredControlsList) {
-            $controls = $controls | Where-Object { $ScoredControlsList -contains $_.Id }
+            $controls = @($controls | Where-Object { $ScoredControlsList -contains $_.Id })
         }
 
         return $controls
@@ -192,7 +192,10 @@ function Get-OrganizationInfo {
     param()
 
     try {
-        $organization = Get-MgOrganization -ErrorAction Stop
+        $orgResult = Get-MgOrganization -ErrorAction Stop
+
+        # Handle both array and single object returns
+        $organization = if ($orgResult -is [Array]) { $orgResult[0] } else { $orgResult }
 
         if ($organization) {
             return @{

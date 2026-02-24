@@ -26,7 +26,8 @@
       "Enable Security Defaults": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Properties",
       "Do not allow users to grant consent to unmanaged applications": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/UserSettings",
       "Ensure the admin consent workflow is enabled": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/~/AdminConsentSettings",
-      "Restrict access to Azure AD administration portal": "https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/UserSettings"
+      "Restrict access to Azure AD administration portal": "https://entra.microsoft.com/#view/Microsoft_AAD_UsersAndTenants/UserManagementMenuBlade/~/UserSettings",
+      "Ensure third party integrated applications are not allowed": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/~/AppAppsPreview"
     },
     "Defender": {
       "Turn on Microsoft Defender for Office 365": "https://security.microsoft.com/threatpolicy",
@@ -51,7 +52,8 @@
     "Exchange": {
       "Ensure modern authentication for Exchange Online is enabled": "https://admin.exchange.microsoft.com/#/organizationsettings",
       "Create mail flow rules to restrict or filter emails": "https://admin.exchange.microsoft.com/#/transportrules",
-      "Ensure mail transport rules do not whitelist specific domains": "https://admin.exchange.microsoft.com/#/transportrules"
+      "Ensure mail transport rules do not whitelist specific domains": "https://admin.exchange.microsoft.com/#/transportrules",
+      "Ensure all forms of mail forwarding are blocked and/or disabled": "https://admin.exchange.microsoft.com/#/transportrules"
     },
     "SharePoint": {
       "Ensure modern authentication for SharePoint applications is required": "https://admin.microsoft.com/sharepoint?page=sharing&modern=true",
@@ -62,20 +64,22 @@
     },
     "Groups": {
       "Ensure Microsoft 365 group creation is restricted": "https://admin.microsoft.com/#/Settings/Services/:/Settings/L1/O365Groups",
-      "Manage who can create Microsoft 365 groups": "https://admin.microsoft.com/#/Settings/Services/:/Settings/L1/O365Groups"
+      "Manage who can create Microsoft 365 groups": "https://admin.microsoft.com/#/Settings/Services/:/Settings/L1/O365Groups",
+      "Ensure that only organizationally managed/approved public groups exist": "https://admin.microsoft.com/#/groups"
     },
     "Teams": {
       "Ensure modern authentication for Microsoft Teams is enabled": "https://admin.teams.microsoft.com/policies/authentication"
     },
     "Compliance": {
-      "Enable Microsoft Purview Audit (Standard)": "https://compliance.microsoft.com/auditlogsearch",
-      "Enable Microsoft Purview Audit (Premium)": "https://compliance.microsoft.com/auditlogsearch",
-      "Turn on audit log search": "https://compliance.microsoft.com/auditlogsearch",
-      "Enable the Microsoft 365 Management Activity API": "https://compliance.microsoft.com/auditlogsearch",
-      "Create DLP policies": "https://compliance.microsoft.com/datalossprevention/policies",
-      "Enable sensitivity labels": "https://compliance.microsoft.com/informationprotection/labels",
-      "Enable auto-labeling policies": "https://compliance.microsoft.com/informationprotection/autolabeling",
-      "Turn on sensitivity labels for files in SharePoint and OneDrive": "https://compliance.microsoft.com/informationprotection/labels"
+      "Enable Microsoft Purview Audit (Standard)": "https://purview.microsoft.com/audit/auditsearch",
+      "Enable Microsoft Purview Audit (Premium)": "https://purview.microsoft.com/audit/auditsearch",
+      "Turn on audit log search": "https://purview.microsoft.com/audit/auditsearch",
+      "Enable the Microsoft 365 Management Activity API": "https://purview.microsoft.com/audit/auditsearch",
+      "Create DLP policies": "https://purview.microsoft.com/datalossprevention/policies",
+      "Enable sensitivity labels": "https://purview.microsoft.com/informationprotection/labels",
+      "Enable auto-labeling policies": "https://purview.microsoft.com/informationprotection/autolabeling",
+      "Turn on sensitivity labels for files in SharePoint and OneDrive": "https://purview.microsoft.com/informationprotection/labels",
+      "Ensure Office 365 Management Activity API is Enabled for some workloads (see description)": "https://purview.microsoft.com/audit/auditsearch"
     },
     "Intune": {
       "Require device compliance policies": "https://intune.microsoft.com/#view/Microsoft_Intune_DeviceSettings/DevicesComplianceMenu/~/policies",
@@ -106,8 +110,8 @@
       "url": "https://security.microsoft.com/"
     },
     "compliance": {
-      "keywords": ["Compliance", "DLP", "audit", "label", "retention"],
-      "url": "https://compliance.microsoft.com/"
+      "keywords": ["Compliance", "DLP", "audit", "label", "retention", "Purview"],
+      "url": "https://purview.microsoft.com/"
     },
     "intune": {
       "keywords": ["Intune", "device", "mobile"],
@@ -122,6 +126,7 @@
     "https://portal.office.com": "https://admin.microsoft.com",
     "https://aad.portal.azure.com": "https://entra.microsoft.com",
     "https://portal.azure.com/#blade/Microsoft_AAD_IAM": "https://entra.microsoft.com/#view/Microsoft_AAD_IAM",
-    "https://portal.azure.com/#view/Microsoft_AAD": "https://entra.microsoft.com/#view/Microsoft_AAD"
+    "https://portal.azure.com/#view/Microsoft_AAD": "https://entra.microsoft.com/#view/Microsoft_AAD",
+    "https://compliance.microsoft.com": "https://purview.microsoft.com"
   }
 }

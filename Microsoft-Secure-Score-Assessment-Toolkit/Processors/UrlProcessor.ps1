@@ -1,5 +1,6 @@
 # Module-level cache for control mappings
 $script:ControlMappingsCache = $null
+$script:ControlMappingsFlat = $null
 $script:ConfigPath = $null
 
 function Initialize-UrlProcessor {
@@ -27,7 +28,16 @@ function Initialize-UrlProcessor {
         $script:ConfigPath = $ConfigPath
         $configContent = Get-Content -Path $ConfigPath -Raw -Encoding UTF8
         $script:ControlMappingsCache = $configContent | ConvertFrom-Json
-        Write-Verbose "Loaded control mappings from $ConfigPath"
+
+        # Build a flat hashtable for O(1) lookup by control name
+        $script:ControlMappingsFlat = @{}
+        foreach ($category in $script:ControlMappingsCache.controlMappings.PSObject.Properties) {
+            foreach ($mapping in $category.Value.PSObject.Properties) {
+                $script:ControlMappingsFlat[$mapping.Name] = $mapping.Value
+            }
+        }
+
+        Write-Verbose "Loaded $($script:ControlMappingsFlat.Count) control mappings from $ConfigPath"
     }
     catch {
         throw "Failed to load control mappings configuration: $_"
@@ -54,19 +64,16 @@ function Get-ControlMapping {
         [string]$ControlName
     )
 
-    if (-not $script:ControlMappingsCache) {
+    if (-not $script:ControlMappingsFlat) {
         Write-Warning "URL processor not initialized. Call Initialize-UrlProcessor first."
         return $null
     }
 
-    # Search through all category mappings using exact match
-    foreach ($category in $script:ControlMappingsCache.controlMappings.PSObject.Properties) {
-        foreach ($mapping in $category.Value.PSObject.Properties) {
-            if ($ControlName -eq $mapping.Name) {
-                Write-Verbose "Found exact mapping for '$ControlName': $($mapping.Value)"
-                return $mapping.Value
-            }
-        }
+    # O(1) hashtable lookup instead of nested loop
+    if ($script:ControlMappingsFlat.ContainsKey($ControlName)) {
+        $url = $script:ControlMappingsFlat[$ControlName]
+        Write-Verbose "Found exact mapping for '$ControlName': $url"
+        return $url
     }
 
     return $null
@@ -145,9 +152,12 @@ function Update-LegacyPortalUrl {
         $updatedUrl = $updatedUrl -replace [regex]::Escape($oldUrl), $newUrl
     }
 
-    # Additional Entra ID specific updates
+    # Additional Entra ID specific updates (commercial cloud only — do not rewrite sovereign cloud URLs)
     if ($updatedUrl -match 'Microsoft_AAD' -and $updatedUrl -notmatch 'entra\.microsoft\.com') {
-        $updatedUrl = $updatedUrl -replace 'https://portal\.azure\.com', 'https://entra.microsoft.com'
+        # Only rewrite portal.azure.com (commercial), not sovereign cloud variants
+        if ($updatedUrl -match '^https://portal\.azure\.com/' -and $updatedUrl -notmatch '\.azure\.(us|cn|de)/') {
+            $updatedUrl = $updatedUrl -replace 'https://portal\.azure\.com', 'https://entra.microsoft.com'
+        }
     }
 
     return $updatedUrl
@@ -189,8 +199,8 @@ function Add-TenantContext {
     if ($updatedUrl -match 'tid=') {
         $updatedUrl = $updatedUrl -replace 'tid=[a-f0-9-]+', "tid=$TenantId"
     }
-    # Add tenant ID to Entra and Azure portal URLs that don't have it
-    elseif ($updatedUrl -match '^https://(portal\.azure\.com|aad\.portal\.azure\.com|entra\.microsoft\.com)') {
+    # Add tenant ID to Entra and Azure portal URLs that don't have it (including sovereign clouds)
+    elseif ($updatedUrl -match '^https://(portal\.azure\.com|portal\.azure\.us|portal\.azure\.cn|portal\.microsoftazure\.de|aad\.portal\.azure\.com|entra\.microsoft\.com)') {
         if ($updatedUrl -match '\?') {
             $updatedUrl = $updatedUrl -replace '\?', "?tid=$TenantId&"
         }
@@ -253,7 +263,19 @@ function Optimize-ControlUrl {
         $optimizedUrl = $exactMapping
         Write-Verbose "Using exact mapping for '$ControlName'"
     }
-    # Step 2: If URL points to documentation, find a better config URL
+    # Step 2: If URL is not a valid HTTP(S) URL, try fallback or clear it
+    elseif ($optimizedUrl -notmatch '^https?://') {
+        $fallbackUrl = Get-FallbackUrl -ControlName $ControlName
+        if ($fallbackUrl) {
+            $optimizedUrl = $fallbackUrl
+            Write-Verbose "Replaced non-HTTP URL with portal fallback for '$ControlName'"
+        }
+        else {
+            Write-Verbose "Cleared non-HTTP URL for '$ControlName': $optimizedUrl"
+            return ""
+        }
+    }
+    # Step 3: If URL points to documentation, find a better config URL
     elseif ($optimizedUrl -match 'learn\.microsoft\.com') {
         $fallbackUrl = Get-FallbackUrl -ControlName $ControlName
         if ($fallbackUrl) {
@@ -282,7 +304,7 @@ function Test-UrlProcessorInitialized {
     [CmdletBinding()]
     param()
 
-    return ($null -ne $script:ControlMappingsCache)
+    return ($null -ne $script:ControlMappingsCache -and $null -ne $script:ControlMappingsFlat)
 }
 
 # Functions are exported via the main module manifest (.psd1)

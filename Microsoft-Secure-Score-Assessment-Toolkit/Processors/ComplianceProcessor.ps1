@@ -307,10 +307,9 @@ function Test-ControlDataValid {
         return $false
     }
 
-    # Validate ActionUrl if present (should be a valid URL or empty)
+    # Warn about non-standard ActionUrl but do not reject the control
     if ($Control.ActionUrl -and $Control.ActionUrl -notmatch '^https?://') {
-        Write-Warning "Control $($Control.Id) has invalid ActionUrl format"
-        return $false
+        Write-Verbose "Control $($Control.Id) has non-standard ActionUrl format: $($Control.ActionUrl)"
     }
 
     return $true
