@@ -404,6 +404,19 @@ Invoke-MicrosoftSecureScore
 
 ## 📝 Changelog
 
+### [2.3.0] - 2026-02-24
+**Security Hardening, Performance Fixes, and Portal URL Modernization:**
+- **Bug Fixes**: Fixed composable filter system, progress bar counting, Get-OrganizationInfo array handling, 2 GitHub controls silently dropped
+- **Performance**: StringBuilder for HTML generation, O(1) hashtable lookup for URL mappings, async Google Fonts loading
+- **Security**: Removed dangerous auto-install with -Force -AllowClobber, prevented sovereign cloud URL rewriting, diagnostic logging for empty catch blocks
+- **Portal URL Modernization**: Migrated compliance.microsoft.com to purview.microsoft.com, added 6 new control mappings (71 total)
+- **Module Quality**: Declared RequiredModules in manifest, cross-platform paths, clean state teardown, PSCustomObject returns, array-safe API calls
+
+### [2.2.1] - 2025-12-20
+**Encoding Fix:**
+- Fixed non-ASCII characters (bullets, em dashes, smart quotes) displaying as garbled text in reports
+- All non-ASCII characters now encoded as HTML numeric entities for reliable rendering
+
 ### [2.2.0] - 2026-02-22
 **CSV Export, Bug Fixes, and Quality Improvements:**
 - **CSV Export**: New `-CsvPath` parameter exports all control data to CSV for spreadsheet analysis

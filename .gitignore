@@ -28,3 +28,6 @@ desktop.ini
 *.tmp
 *.temp
 ~$*
+
+# Project status (local only)
+projectstatus.md
