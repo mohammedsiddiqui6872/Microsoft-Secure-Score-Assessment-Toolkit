@@ -418,7 +418,6 @@ This project is provided as-is under the MIT License for security assessment pur
 ## 👨‍💻 Author
 
 **Mohammed Siddiqui**
-- 🐙 GitHub: [@mohammedsiddiqui6872](https://github.com/mohammedsiddiqui6872)
 - 💼 LinkedIn: [Let's Chat!](https://www.linkedin.com/in/mohammedsiddiqui6872/)
 - ☕ Support: [Buy Me a Coffee](https://buymeacoffee.com/mohammedsiddiqui)
 
