@@ -59,14 +59,6 @@ Update-Module -Name Microsoft-Secure-Score-Assessment-Toolkit -Force
 Get-Module -ListAvailable Microsoft-Secure-Score-Assessment-Toolkit
 ```
 
-### 💖 Support This Project
-
-If this toolkit has helped improve your security posture, consider supporting its development:
-
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support%20This%20Project-yellow.svg?style=for-the-badge&logo=buy-me-a-coffee)](https://buymeacoffee.com/mohammedsiddiqui)
-
-Your support helps maintain and improve this toolkit with new features, updates, and compatibility with the latest Microsoft 365 security controls!
-
 ### Prerequisites
 
 - **PowerShell**: Windows PowerShell 5.1 or PowerShell 7+
@@ -412,92 +404,6 @@ Invoke-MicrosoftSecureScore
 - **Portal URL Modernization**: Migrated compliance.microsoft.com to purview.microsoft.com, added 6 new control mappings (71 total)
 - **Module Quality**: Declared RequiredModules in manifest, cross-platform paths, clean state teardown, PSCustomObject returns, array-safe API calls
 
-### [2.2.1] - 2025-12-20
-**Encoding Fix:**
-- Fixed non-ASCII characters (bullets, em dashes, smart quotes) displaying as garbled text in reports
-- All non-ASCII characters now encoded as HTML numeric entities for reliable rendering
-
-### [2.2.0] - 2026-02-22
-**CSV Export, Bug Fixes, and Quality Improvements:**
-- **CSV Export**: New `-CsvPath` parameter exports all control data to CSV for spreadsheet analysis
-- **Disconnect Function**: New `Disconnect-MicrosoftSecureScore` for proper session cleanup
-- **No-Open Switch**: New `-NoOpen` parameter suppresses automatic browser launch (ideal for automation)
-- **PowerShellNerd Branding**: Logo in header and floating action menu
-- **8 Bug Fixes**: Division by zero, Firefox/Safari filter crash, broken HTML layout, emoji encoding, namespace pollution, loading overlay, URL matching, stale references
-- **Performance**: Replaced O(n^2) array operations with List collection, removed redundant imports
-- **Code Quality**: Eliminated duplicate code, removed dead JavaScript, path validation, version from manifest
-
-### [2.1.0] - 2026-02-01
-**Category Filtering Feature:**
-- **ExcludeCategories Parameter**: New parameter to exclude specific control categories from reports
-- **Category Options**: Filter out Identity, Defender, Exchange, SharePoint, Groups, Teams, Compliance, or Intune controls
-- **Multiple Category Support**: Exclude multiple categories using array syntax: `-ExcludeCategories @("Exchange", "SharePoint")`
-- **ValidateSet Tab-Completion**: Valid category names enforced with PowerShell tab-completion
-- **Enhanced Logging**: Shows excluded categories and count of filtered controls in log output
-
-### [1.3.1] - 2025-11-14
-**Complete Entra Portal Migration & Enhanced URL Mappings:**
-- **Complete Azure AD to Entra Portal Migration**: All Azure AD portal URLs now use entra.microsoft.com (0 old aad.portal.azure.com links remain)
-- **Enhanced Control Mappings**: Added 15+ additional control-specific URL mappings across all categories
-- **New Mappings**: Admin consent workflow, M365 Groups restrictions, SPF/DKIM/DMARC, Defender for Cloud Apps, mail flow rules, SharePoint domain restrictions, Management Activity API, sensitivity labels
-- **URL Quality**: Verified 60+ control-to-portal mappings for accuracy across 328 unique URLs
-- **Intelligent Documentation Links**: Only 6 documentation links remain where no portal equivalent exists (DNS configs, on-prem settings, API references)
-
-### [1.3.0] - 2025-11-14
-**Major Enhancement:**
-- Added 40+ specific control-to-URL mappings for accurate configuration links
-- Configuration buttons now point to exact settings pages instead of documentation
-- Fixes critical issue where controls pointed to learn.microsoft.com instead of actual portals
-- Mapped controls across 7 major categories: Identity, Defender, Exchange, SharePoint, Teams, Compliance, Intune
-- Added intelligent fallback logic to route documentation links to appropriate portals
-- Example: "Ensure Administrative accounts are separate" now opens M365 Admin Users (filtered to admins) instead of documentation
-
-### [1.2.5] - 2025-11-14
-**Enhanced:**
-- Added ActionUrl optimization to ensure Configuration buttons link to correct settings pages
-- Automatically corrects outdated portal URLs (portal.office.com → admin.microsoft.com)
-- Updates old blade-style URLs to new view-style URLs for Entra ID
-- Fixes Conditional Access and MFA URLs to point directly to policy pages
-- Enhanced tenant context injection for all Azure portal URLs
-
-### [1.2.4] - 2025-11-14
-**Fixed:**
-- Fixed overlapping Configuration and Documentation buttons in expanded control details
-- Added proper CSS class separation between floating action buttons and control detail buttons
-- Improved button layout with flex-wrap for better responsiveness
-
-### [1.2.3] - 2025-11-14
-**Enhanced:**
-- Updated HTML report header to "Microsoft SECURE SCORE ASSESSMENT"
-- Removed API-DRIVEN badge for cleaner appearance
-
-### [1.2.2] - 2025-11-14
-**Fixed:**
-- Fixed PowerShell parsing errors with special characters
-- Module now imports and loads correctly
-
-### [1.2.0] - 2025-11-14
-**Added:**
-- PowerShell Gallery module structure
-- `Connect-MicrosoftSecureScore` function for authentication
-- `Invoke-MicrosoftSecureScore` function for report generation
-- `Get-MicrosoftSecureScoreInfo` function for toolkit information
-- Floating action buttons with SVG icons
-- Compact single-line footer
-
-### [1.1.0] - 2025-11-13
-**Added:**
-- Interactive filtering via clickable summary cards
-- 6-card single-row dashboard layout
-- Tenant attribution in reports
-- GitHub repository links
-
-### [1.0.0] - 2025-11-12
-**Initial Release:**
-- Microsoft Graph API integration
-- 411+ security controls
-- Interactive HTML reports
-
 [View Full Changelog](CHANGELOG.md)
 
 ---
@@ -548,17 +454,6 @@ This project is provided as-is under the MIT License for security assessment pur
 ## ⚠️ Disclaimer
 
 This toolkit is not affiliated with or endorsed by Microsoft Corporation. Microsoft, Microsoft 365, Azure Active Directory, and related trademarks are property of Microsoft Corporation.
-
----
-
-## 🔗 Links
-
-- 📦 [PowerShell Gallery](https://www.powershellgallery.com/packages/Microsoft-Secure-Score-Assessment-Toolkit)
-- 🐙 [GitHub Repository](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit)
-- 🐛 [Report Issues](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues)
-- 💬 [Submit Feedback](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues/new)
-- 👔 [LinkedIn](https://www.linkedin.com/in/mohammedsiddiqui6872/)
-- ☕ [Buy Me a Coffee](https://buymeacoffee.com/mohammedsiddiqui)
 
 ---
 
