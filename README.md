@@ -408,24 +408,6 @@ Invoke-MicrosoftSecureScore
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-### Report Issues
-Found a bug or have a feature request?
-[Open an issue](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues)
-
-### Submit Feedback
-Have suggestions for improvements?
-[Share your feedback](https://github.com/mohammedsiddiqui6872/Microsoft-Secure-Score-Assessment-Toolkit/issues/new)
-
-### Support This Project
-If this toolkit has helped improve your security posture:
-
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support-yellow.svg?style=for-the-badge)](https://buymeacoffee.com/mohammedsiddiqui)
-
----
 
 ## 📜 License
 
