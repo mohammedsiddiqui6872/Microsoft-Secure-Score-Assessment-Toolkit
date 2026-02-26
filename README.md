@@ -170,37 +170,13 @@ Invoke-MicrosoftSecureScore -TenantName "Contoso" -ApplicableOnly -ExcludeCatego
 
 ---
 
-### Disconnect-MicrosoftSecureScore
+### Disconnect-MicrosoftSecureScore & Get-MicrosoftSecureScoreInfo
 
-Disconnect from Microsoft Graph and clean up session.
+| Command | Description |
+|---|---|
+| `Disconnect-MicrosoftSecureScore` | Disconnect from Microsoft Graph and clean up session |
+| `Get-MicrosoftSecureScoreInfo` | Display toolkit information, version, and usage guide |
 
-**Syntax:**
-```powershell
-Disconnect-MicrosoftSecureScore
-```
-
-**Example:**
-```powershell
-Disconnect-MicrosoftSecureScore
-```
-
----
-
-### Get-MicrosoftSecureScoreInfo
-
-Display toolkit information, version, and usage guide.
-
-**Syntax:**
-```powershell
-Get-MicrosoftSecureScoreInfo
-```
-
-**Example:**
-```powershell
-Get-MicrosoftSecureScoreInfo
-```
-
----
 
 ## 💡 Usage Scenarios
 
