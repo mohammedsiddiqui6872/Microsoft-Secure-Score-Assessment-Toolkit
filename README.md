@@ -396,7 +396,7 @@ This project is provided as-is under the MIT License for security assessment pur
 
 **Mohammed Siddiqui**
 - 💼 LinkedIn: [Let's Chat!](https://www.linkedin.com/in/mohammedsiddiqui6872/)
-- ☕ Support: [Buy Me a Coffee](https://buymeacoffee.com/mohammedsiddiqui)
+- 🟣 PowerShellNerd: [My Profile](https://powershellnerd.com/profile/mohammedsiddiqui)
 
 ---
 
